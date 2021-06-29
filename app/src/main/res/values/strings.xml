@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">EasyWaive</string>
+    <string name="agreement">I agree to the terms and conditions.</string>
+    <string name="clear_pad">Clear Pad</string>
+    <string name="save_signature">Save Signature</string>
+    <string name="signature">Signature:</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="new_button">New Form</string>
+    <string name="view_forms">Change Org Name</string>
+    <string name="agree">I Agree</string>
+    <string name="title">VIDEO and PHOTOGRAPH RELEASE FORM</string>
+    <string name="org">Update</string>
+    <string name="prompt">Start filling out a new form, or change the name of your organization</string>
+    <string name="share">Upload Pdf</string>
+    <string name="about">About</string>
+    <string name="back">Back</string>
+    <string name="dialog_message">EasyWaive is designed to facilitate the collection of Photo and Video Recording Release Forms. To get started, set your organization name that the forms will apply to. Select new form to begin filling out a new waiver. After the signer is finished, you can choose to share the most recently signed pdf document by selecting upload pdf. All documents can also be found in Documents/EasyWaive/ in this phone\'s storage, along with a list of all entered emails.</string>
+    <string name="continue_button">Continue</string>
+    <string name="thanks">Thank You!</string>
+</resources>
