@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toolbar;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +31,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar myToolbar = findViewById(R.id.home_toolbar);
         setActionBar(myToolbar);
+        //getActionBar().setIcon(R.mipmap.ic_launcher_round);
+
 
         String organization = read_file(getApplicationContext(), "organization.txt");
         //Toast.makeText(HomeActivity.this, organization, Toast.LENGTH_SHORT).show();

@@ -106,10 +106,12 @@ public class MainActivity extends Activity {
                 EditText email = findViewById(R.id.email_text);
                 String emailStr = email.getText().toString();
 
-                try {
-                    writeEmail(emailStr);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                if (emailStr.contains("@")) {
+                    try {
+                        writeEmail(emailStr);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 //String dest = nameStr + "Release.pdf";
