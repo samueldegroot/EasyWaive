@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,12 +25,41 @@ public class ChangeOrgActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_org);
         String org = getIntent().getStringExtra("org");
         EditText editText = findViewById(R.id.org_tv);
-        editText.setText(org);
+        editText.setHint(org);
         Button org_button = findViewById(R.id.org_button);
+        Button back_button = findViewById(R.id.back_button);
         Toolbar myToolbar = findViewById(R.id.org_toolbar);
         setActionBar(myToolbar);
 
-        //onclick
+        //enable update button after user types something
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                org_button.setEnabled(true);
+                org_button.setAlpha(1);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //do nothing
+            }
+        });
+
+        //back to home without updating
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(ChangeOrgActivity.this, HomeActivity.class);
+                ChangeOrgActivity.this.startActivity(myIntent);
+            }
+        });
+
+        //store input into organization.txt in internal storage
         org_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
