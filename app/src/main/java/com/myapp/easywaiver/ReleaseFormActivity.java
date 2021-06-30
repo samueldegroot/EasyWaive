@@ -14,7 +14,6 @@ import android.widget.Toolbar;
 
 public class ReleaseFormActivity extends AppCompatActivity {
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

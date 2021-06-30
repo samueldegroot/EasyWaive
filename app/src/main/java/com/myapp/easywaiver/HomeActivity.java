@@ -24,7 +24,6 @@ import java.io.UnsupportedEncodingException;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
