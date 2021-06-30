@@ -13,6 +13,7 @@
         android:background="@color/blue_grey"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:titleTextColor="@color/white"
         signature:contentInsetEnd="0dp"
         signature:contentInsetLeft="0dp"
         signature:contentInsetRight="0dp"
