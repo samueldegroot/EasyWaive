@@ -21,4 +21,5 @@
     <string name="welcome">Welcome!</string>
     <string name="set_org">Set your organization name</string>
     <string name="input">Type your name and (optional) email address, then sign the pad and save</string>
+
 </resources>
