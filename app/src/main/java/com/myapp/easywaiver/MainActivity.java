@@ -71,12 +71,16 @@ public class MainActivity extends Activity {
             public void onSigned() {
                 mSaveButton.setEnabled(true);
                 mClearButton.setEnabled(true);
+                mSaveButton.setAlpha(1);
+                mClearButton.setAlpha(1);
             }
 
             @Override
             public void onClear() {
                 mSaveButton.setEnabled(false);
                 mClearButton.setEnabled(false);
+                mSaveButton.setAlpha((float) 0.3);
+                mClearButton.setAlpha((float) 0.3);
             }
 
         });
