@@ -13,43 +13,39 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-//import android.support.annotation.NonNull;
-import androidx.annotation.NonNull;
-//import android.support.v4.app.ActivityCompat;
-import androidx.annotation.RequiresApi;
-
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.widget.EditText;
-import android.widget.Toolbar;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+//import android.support.annotation.NonNull;
+//import android.support.v4.app.ActivityCompat;
+
 public class MainActivity extends Activity {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE};
+    private static final String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private SignaturePad mSignaturePad;
     private Button mClearButton;
     private Button mSaveButton;
