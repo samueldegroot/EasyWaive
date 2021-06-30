@@ -145,7 +145,7 @@ public class MainActivity extends Activity {
     public boolean addPDFToDocuments(PdfDocument pdfDocument, String name) {
         boolean result = false;
         try {
-            File pdf = new File(getDocumentStorageDir("EasyWaive"), String.format("%s Release.pdf", name));
+            File pdf = new File(getDocumentStorageDir("EasyWaive"), String.format("%s Release Form.pdf", name));
             pdfDocument.writeTo(new FileOutputStream(pdf));
             scanMediaFile(pdf);
             pdfDocument.close();

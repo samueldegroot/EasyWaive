@@ -1,18 +1,16 @@
 package com.myapp.easywaiver;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toolbar;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar myToolbar = findViewById(R.id.home_toolbar);
         setActionBar(myToolbar);
-        //getActionBar().setIcon(R.mipmap.ic_launcher_round);
+        //getActionBar().setIcon(R.mipmap.ic_launcher_round); //icon too big to use :(
 
 
         String organization = read_file(getApplicationContext(), "organization.txt");
@@ -40,6 +38,13 @@ public class HomeActivity extends AppCompatActivity {
         Button org_button = findViewById(R.id.org);
         Button share_button = findViewById(R.id.share);
         Button about_button = findViewById(R.id.about);
+
+        //get last signed pdf, if exists enable share button
+        File lastPdf = (File) getIntent().getSerializableExtra("pdfFile");
+        if (lastPdf != null) {
+            share_button.setEnabled(true);
+            share_button.setAlpha(1);
+        }
 
         new_form_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,10 +68,7 @@ public class HomeActivity extends AppCompatActivity {
         share_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                File lastPdf = (File) getIntent().getSerializableExtra("pdfFile");
-                if (lastPdf != null) {
-                    shareFile(lastPdf);
-                }
+                shareFile(lastPdf);
             }
         });
 
