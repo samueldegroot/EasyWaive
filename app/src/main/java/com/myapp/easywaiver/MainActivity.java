@@ -142,14 +142,12 @@ public class MainActivity extends Activity {
         return file;
     }
 
-    public boolean addPDFToDocuments(PdfDocument pdfDocument, String name) {
-        boolean result = false;
+    public void addPDFToDocuments(PdfDocument pdfDocument, String name) {
         try {
             File pdf = new File(getDocumentStorageDir("EasyWaive"), String.format("%s Release Form.pdf", name));
             pdfDocument.writeTo(new FileOutputStream(pdf));
             scanMediaFile(pdf);
             pdfDocument.close();
-            //shareFile(pdf);
 
             Toast.makeText(MainActivity.this, "Generated Signed PDF", Toast.LENGTH_SHORT).show();
 
@@ -169,12 +167,9 @@ public class MainActivity extends Activity {
             // Create the AlertDialog
             AlertDialog dialog = builder.create();
             dialog.show();
-
-            result = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
     }
 
     private void scanMediaFile(File photo) {

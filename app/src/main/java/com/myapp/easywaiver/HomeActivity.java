@@ -2,6 +2,8 @@ package com.myapp.easywaiver;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -98,12 +101,6 @@ public class HomeActivity extends AppCompatActivity {
                     "com.myapp.easywaiver.provider", //(use your app signature + ".provider" )
                     myFile);
             intentShareFile.putExtra(Intent.EXTRA_STREAM, myUri);
-
-            grantUriPermission("com.myapp.easywaiver.provider", myUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            grantUriPermission("com.myapp.easywaiver.provider", myUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            grantUriPermission("com.myapp.easywaiver.provider", myUri, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-
-            //intentShareFile.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             this.startActivity(Intent.createChooser(intentShareFile, "Upload signed form"));
         }
