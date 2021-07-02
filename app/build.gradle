@@ -3,6 +3,13 @@ plugins {
     id 'kotlin-android'
 }
 
+def localProperties = new Properties()
+try {
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+} catch (Exception e) {
+    logger.warn("No Local Properties File Found!")
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -11,8 +18,15 @@ android {
         applicationId "com.myapp.easywaiver"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 5
+        versionCode 6
         versionName "1.2"
+
+        if (!localProperties['base64EncodedPublicKey']) {
+            logger.warn('base64EncodedPublicKey must be set for signature verification. ' +
+                    'You can add it to local.properties once you have gotten it from Play. ' +
+                    'Example: base64EncodedPublicKey=[key value]')
+        }
+        buildConfigField("String", "BASE64_ENCODED_PUBLIC_KEY", "\"" + localProperties['base64EncodedPublicKey'] + "\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
