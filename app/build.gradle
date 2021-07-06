@@ -18,7 +18,7 @@ android {
         applicationId "com.myapp.easywaiver"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 7
+        versionCode 8
         versionName "1.2"
 
         if (!localProperties['base64EncodedPublicKey']) {

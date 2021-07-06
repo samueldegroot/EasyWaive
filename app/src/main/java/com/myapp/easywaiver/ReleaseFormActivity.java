@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -31,10 +33,30 @@ public class ReleaseFormActivity extends AppCompatActivity {
                 "I hereby warrant that I am over 17 years of age and competent to contract in my own name.  This release is binding on me and my heirs, assigns and personal representatives.";
 
         TextView tv = findViewById(R.id.waiver_text);
+        ScrollView sv = findViewById(R.id.scrollView2);
 
         tv.setText(waiver_text);
 
         Button agree_button = findViewById(R.id.agree_button);
+        agree_button.setEnabled(false);
+        agree_button.setAlpha((float) 0.3);
+
+        sv.getViewTreeObserver()
+                .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        if (sv.getChildAt(0).getBottom()
+                                == (sv.getHeight() + sv.getScrollY())) {
+                            //scroll view is at bottom
+                            agree_button.setEnabled(true);
+                            agree_button.setAlpha((float) 1);
+                        } else {
+                            //scroll view is not at bottom
+                            agree_button.setEnabled(false);
+                            agree_button.setAlpha((float) 0.3);
+                        }
+                    }
+                });
 
         agree_button.setOnClickListener(new View.OnClickListener() {
             @Override

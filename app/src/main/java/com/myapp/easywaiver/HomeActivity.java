@@ -46,6 +46,7 @@ import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     private HomeActivityViewModel homeActivityViewModel;
+    Boolean isActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +84,12 @@ public class HomeActivity extends AppCompatActivity {
 
         EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
 
-        //getLifecycle().addObserver(ewr.getBillingLifecycleObserver());
-
-        //Log.v("billing flow", ewr.getBillingFlowInProcess().getValue().toString());
-        //Log.v("skutitle", ewr.getSkuTitle(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue());
-        //ewr.buySku(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
-        //Log.v("ispurchased", Objects.requireNonNull(((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository.isPurchased(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue()).toString());
+        isActive = ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
 
         new_form_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION)) {
+                if (isActive) {
                     Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
                     myIntent.putExtra("org", organization);
                     HomeActivity.this.startActivity(myIntent);
@@ -101,6 +97,7 @@ public class HomeActivity extends AppCompatActivity {
                 else {
                     ewr.billingDataSource.launchBillingFlow(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
                 }
+                isActive = ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
 
                 /*
                 if (ewr.isPurchased(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue()) {//if active subscription
