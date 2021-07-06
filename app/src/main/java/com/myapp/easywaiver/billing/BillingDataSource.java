@@ -29,6 +29,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
+import com.myapp.easywaiver.HomeActivity;
 import com.myapp.easywaiver.SingleMediatorLiveEvent;
 
 import java.util.ArrayList;
@@ -688,7 +689,7 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
 
 
     //my function
-    public boolean isActiveSubcription(@NonNull String sku) {
+    public Boolean isActiveSubcription(@NonNull String sku) {
         AtomicReference<Boolean> result = new AtomicReference<>(false);
         LiveData<SkuDetails> skuDetailsLiveData = skuDetailsLiveDataMap.get(sku);
         assert skuDetailsLiveData != null;
@@ -700,6 +701,7 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
                             for (Purchase purchase : purchasesList) {
                                 for (String purchaseSku : purchase.getSkus()) {
                                     if (purchaseSku.equals(sku)) {
+                                        HomeActivity.isActive = true;
                                         result.set(true);
                                     }
                                 }
@@ -707,6 +709,7 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
                         }
                     });
         }
+        Log.v("result", result.get().toString());
         return result.get();
     }
     /**
