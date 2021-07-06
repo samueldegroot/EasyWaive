@@ -15,7 +15,7 @@ public class EasyWaiveApplication extends Application {
                 EasyWaiveRepository.INAPP_SKUS,
                 EasyWaiveRepository.SUBSCRIPTION_SKUS,
                 EasyWaiveRepository.AUTO_CONSUME_SKUS);
-        final public EasyWaiveRepository trivialDriveRepository = new EasyWaiveRepository(
+        final public EasyWaiveRepository easyWaiveRepository = new EasyWaiveRepository(
                 billingDataSource);
     }
 

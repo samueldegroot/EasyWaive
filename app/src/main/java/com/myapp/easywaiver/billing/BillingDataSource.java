@@ -29,7 +29,7 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
-//import com.sample.android.trivialdrivesample.ui.SingleMediatorLiveEvent;
+import com.myapp.easywaiver.SingleMediatorLiveEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,9 +99,9 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
     // Observables that are used to communicate state.
     final private Set<Purchase> purchaseConsumptionInProcess = new HashSet<>();
 
-    //final private SingleMediatorLiveEvent<List<String>> newPurchase = new SingleMediatorLiveEvent<>();
-    //final private SingleMediatorLiveEvent<List<String>> purchaseConsumed =
-    //        new SingleMediatorLiveEvent<>();
+    final private SingleMediatorLiveEvent<List<String>> newPurchase = new SingleMediatorLiveEvent<>();
+    final private SingleMediatorLiveEvent<List<String>> purchaseConsumed =
+            new SingleMediatorLiveEvent<>();
 
     final private MutableLiveData<Boolean> billingFlowInProcess = new MutableLiveData<>();
     // how long before the data source tries to reconnect to Google play
@@ -239,12 +239,10 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
      *
      * @return LiveData that contains the sku of the new purchase.
      */
-    /*
     public final LiveData<List<String>> observeNewPurchases() {
         return newPurchase;
     }
 
-     */
 
     /**
      * This is a single live event that observes consumed purchases from calling the consume
@@ -252,12 +250,12 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
      *
      * @return LiveData that contains the sku of the consumed purchase.
      */
-    /*
+
     public final LiveData<List<String>> observeConsumedPurchases() {
         return purchaseConsumed;
     }
 
-     */
+
 
     /**
      * Returns whether or not the user has purchased a SKU. It does this by returning a
@@ -629,7 +627,7 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
                                 for ( String sku : purchase.getSkus() ) {
                                     setSkuState(sku, SkuState.SKU_STATE_PURCHASED_AND_ACKNOWLEDGED);
                                 }
-                                //newPurchase.postValue(purchase.getSkus());
+                                newPurchase.postValue(purchase.getSkus());
                             }
                         });
                     }
@@ -678,7 +676,7 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
                     setSkuState(sku, SkuState.SKU_STATE_UNPURCHASED);
                     // And this also qualifies as a new purchase
                 }
-                //newPurchase.postValue(purchase.getSkus());
+                newPurchase.postValue(purchase.getSkus());
             } else {
                 Log.e(TAG, "Error while consuming: " + billingResult.getDebugMessage());
             }

@@ -13,6 +13,7 @@ import android.widget.Toolbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.LifecycleObserver;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
@@ -26,6 +27,8 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.myapp.easywaiver.billing.BillingDataSource;
+import com.myapp.easywaiver.EasyWaiveRepository;
+import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,9 +39,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +67,26 @@ public class HomeActivity extends AppCompatActivity {
             share_button.setAlpha(1);
         }
 
+
+        EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
+
+        getLifecycle().addObserver(ewr.getBillingLifecycleObserver());
+
+        Log.v("skutitle", ewr.getSkuTitle(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue());
+        ewr.buySku(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
+        //Log.v("ispurchased", Objects.requireNonNull(((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository.isPurchased(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue()).toString());
+
         new_form_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if () {//if active subscription
+                if (ewr.isPurchased(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue()) {//if active subscription
                     Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
                     myIntent.putExtra("org", organization);
                     HomeActivity.this.startActivity(myIntent);
-               // }
-                //else ask to get subscription
+                }
+                else{ //ask to get subscription
+                    ewr.buySku(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
+                }
             }
         });
 

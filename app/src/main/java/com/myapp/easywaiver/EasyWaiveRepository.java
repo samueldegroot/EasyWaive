@@ -9,6 +9,7 @@ import androidx.lifecycle.MediatorLiveData;
 
 import com.myapp.easywaiver.billing.BillingDataSource;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,7 +40,7 @@ public class EasyWaiveRepository {
         //this.gameStateModel = gameStateModel;
 
         //gameMessages = new SingleMediatorLiveEvent<>();
-        //setupMessagesSingleMediatorLiveEvent();
+        setupMessagesSingleMediatorLiveEvent();
 
         // Since both are tied to application lifecycle
         /*
@@ -61,9 +62,10 @@ public class EasyWaiveRepository {
      * Since the billing data source doesn't know about our SKUs, it also transforms the known SKU
      * strings into useful String messages.
      */
-    /*
+
     void setupMessagesSingleMediatorLiveEvent() {
         final LiveData<List<String>> billingMessages = billingDataSource.observeNewPurchases();
+        /*
         allMessages.addSource(gameMessages, allMessages::setValue);
         allMessages.addSource(billingMessages,
                 stringList -> {
@@ -86,9 +88,11 @@ public class EasyWaiveRepository {
                         }
                     }
                 });
+
+         */
     }
 
-     */
+
 
     /**
      * Drive the car (if we can). This is an asynchronous operation.
