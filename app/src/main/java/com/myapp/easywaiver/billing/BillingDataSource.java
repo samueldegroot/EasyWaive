@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The BillingDataSource implements all billing functionality for our test application. Purchases
@@ -320,6 +321,7 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
     public final LiveData<String> getSkuTitle(String sku) {
         LiveData<SkuDetails> skuDetailsLiveData = skuDetailsLiveDataMap.get(sku);
         assert skuDetailsLiveData != null;
+        //Transformations.map
         return Transformations.map(skuDetailsLiveData, SkuDetails::getTitle);
     }
 
@@ -684,6 +686,29 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
         });
     }
 
+
+    //my function
+    public boolean isActiveSubcription(@NonNull String sku) {
+        AtomicReference<Boolean> result = new AtomicReference<>(false);
+        LiveData<SkuDetails> skuDetailsLiveData = skuDetailsLiveDataMap.get(sku);
+        assert skuDetailsLiveData != null;
+        SkuDetails skuDetails = skuDetailsLiveData.getValue();
+        if (null != skuDetails) {
+            billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS,
+                    (br, purchasesList) -> {
+                        if (null != purchasesList) {
+                            for (Purchase purchase : purchasesList) {
+                                for (String purchaseSku : purchase.getSkus()) {
+                                    if (purchaseSku.equals(sku)) {
+                                        result.set(true);
+                                    }
+                                }
+                            }
+                        }
+                    });
+        }
+        return result.get();
+    }
     /**
      * Launch the billing flow. This will launch an external Activity for a result, so it requires
      * an Activity reference. For subscriptions, it supports upgrading from one SKU type to another

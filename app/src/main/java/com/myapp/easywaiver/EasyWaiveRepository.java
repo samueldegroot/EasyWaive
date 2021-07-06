@@ -26,7 +26,7 @@ public class EasyWaiveRepository {
 
     static final String TAG = "EasyWaive:" + EasyWaiveRepository.class.getSimpleName();
     static final String[] INAPP_SKUS = new String[]{};
-    static final String[] SUBSCRIPTION_SKUS = new String[]{SKU_EASY_WAIVE_APP_SUBSCRIPTION, SKU_EASY_WAIVE_APP_SUBSCRIPTION_YEARLY};
+    static final String[] SUBSCRIPTION_SKUS = new String[]{SKU_EASY_WAIVE_APP_SUBSCRIPTION};
     static final String[] AUTO_CONSUME_SKUS = new String[]{};
 
     final BillingDataSource billingDataSource;
@@ -271,7 +271,9 @@ public class EasyWaiveRepository {
     // There's lots of information in SkuDetails, but our app only needs a few things, since our
     // goods never go on sale, have introductory pricing, etc.
     public final LiveData<String> getSkuTitle(String sku) {
-        return billingDataSource.getSkuTitle(sku);
+        LiveData<String> temp = billingDataSource.getSkuTitle(sku);
+        return temp;
+        //return billingDataSource.getSkuTitle(sku);
     }
 
     public final LiveData<String> getSkuPrice(String sku) {

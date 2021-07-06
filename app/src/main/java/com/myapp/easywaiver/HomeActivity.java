@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
@@ -37,11 +39,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import com.myapp.easywaiver.HomeActivityViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
+    private HomeActivityViewModel homeActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,18 +71,38 @@ public class HomeActivity extends AppCompatActivity {
             share_button.setAlpha(1);
         }
 
+        // Create our Activity ViewModel, which exists to handle global Snackbar messages
+        HomeActivityViewModel.HomeActivityViewModelFactory homeActivityViewModelFactory = new
+                HomeActivityViewModel.HomeActivityViewModelFactory(
+                ((EasyWaiveApplication) getApplication()).appContainer.
+                        easyWaiveRepository);
+        homeActivityViewModel = new ViewModelProvider(this, homeActivityViewModelFactory)
+                .get(HomeActivityViewModel.class);
+        // Allows billing to refresh purchases during onResume
+        getLifecycle().addObserver(homeActivityViewModel.getBillingLifecycleObserver());
 
         EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
 
-        getLifecycle().addObserver(ewr.getBillingLifecycleObserver());
+        //getLifecycle().addObserver(ewr.getBillingLifecycleObserver());
 
-        Log.v("skutitle", ewr.getSkuTitle(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue());
-        ewr.buySku(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
+        //Log.v("billing flow", ewr.getBillingFlowInProcess().getValue().toString());
+        //Log.v("skutitle", ewr.getSkuTitle(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue());
+        //ewr.buySku(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
         //Log.v("ispurchased", Objects.requireNonNull(((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository.isPurchased(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue()).toString());
 
         new_form_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION)) {
+                    Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
+                    myIntent.putExtra("org", organization);
+                    HomeActivity.this.startActivity(myIntent);
+                }
+                else {
+                    ewr.billingDataSource.launchBillingFlow(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
+                }
+
+                /*
                 if (ewr.isPurchased(SKU_EASY_WAIVE_APP_SUBSCRIPTION).getValue()) {//if active subscription
                     Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
                     myIntent.putExtra("org", organization);
@@ -87,6 +111,8 @@ public class HomeActivity extends AppCompatActivity {
                 else{ //ask to get subscription
                     ewr.buySku(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
                 }
+
+                 */
             }
         });
 
