@@ -2,12 +2,12 @@ package com.myapp.easywaiver;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +22,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.jaiselrahman.filepicker.activity.FilePickerActivity;
+import com.jaiselrahman.filepicker.config.Configurations;
+import com.jaiselrahman.filepicker.model.MediaFile;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,10 +33,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
 
 import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private static final String TAG = "HomeActivity";
+    private static final int FILE_REQUEST_CODE = 8777;
     private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
     private static final int PICKFILE_RESULT_CODE = 8778;
@@ -104,13 +113,18 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //temp, uncomment share
-                Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
-                fileintent.setType("*/*");
-                try {
-                    startActivityForResult(fileintent, PICKFILE_RESULT_CODE);
-                } catch (ActivityNotFoundException e) {
-                    Log.e("tag", "No activity can handle picking a file. Showing alternatives.");
-                }
+                Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
+                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                        .setCheckPermission(true)
+                        .setShowImages(false)
+                        .setShowVideos(false)
+                        .setShowFiles(true)
+                        .setSingleChoiceMode(false)
+                        .setSuffixes("pdf", "csv")
+                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "\\EasyWaive")
+                        .build());
+                startActivityForResult(intent, FILE_REQUEST_CODE);
+
                 /*
                 Intent myIntent = new Intent(HomeActivity.this, ChangeOrgActivity.class);
                 myIntent.putExtra("org", organization);
@@ -186,18 +200,18 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Fix no activity available
         super.onActivityResult(requestCode, resultCode, data);
-        if (data == null)
-            return;
-        switch (requestCode) {
-            case PICKFILE_RESULT_CODE:
-                if (resultCode == RESULT_OK) {
-                    String FilePath = data.getData().getPath();
-                    //FilePath is your file as a string
-                    Log.v("filepath", FilePath);
-                }
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case FILE_REQUEST_CODE:
+                    ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+                    for (MediaFile file : files) {
+                        Log.v(TAG, file.getName());
+                    }
+                    break;
+            }
         }
     }
 
