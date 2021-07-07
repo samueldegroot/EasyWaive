@@ -1,55 +1,43 @@
 package com.myapp.easywaiver;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.android.billingclient.api.AcknowledgePurchaseParams;
-import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.myapp.easywaiver.billing.BillingDataSource;
-import com.myapp.easywaiver.EasyWaiveRepository;
-import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import com.myapp.easywaiver.HomeActivityViewModel;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
 
 public class HomeActivity extends AppCompatActivity {
     private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
+    private static final int PICKFILE_RESULT_CODE = 8778;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static final String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar myToolbar = findViewById(R.id.home_toolbar);
         setActionBar(myToolbar);
+        verifyStoragePermissions(this);
         //getActionBar().setIcon(R.mipmap.ic_launcher_round); //icon too big to use :(
 
 
@@ -105,8 +94,7 @@ public class HomeActivity extends AppCompatActivity {
                     Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
                     myIntent.putExtra("org", organization);
                     HomeActivity.this.startActivity(myIntent);
-                }
-                else {
+                } else {
                     ewr.billingDataSource.launchBillingFlow(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
                 }
             }
@@ -115,9 +103,20 @@ public class HomeActivity extends AppCompatActivity {
         org_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //temp, uncomment share
+                Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
+                fileintent.setType("*/*");
+                try {
+                    startActivityForResult(fileintent, PICKFILE_RESULT_CODE);
+                } catch (ActivityNotFoundException e) {
+                    Log.e("tag", "No activity can handle picking a file. Showing alternatives.");
+                }
+                /*
                 Intent myIntent = new Intent(HomeActivity.this, ChangeOrgActivity.class);
                 myIntent.putExtra("org", organization);
                 HomeActivity.this.startActivity(myIntent);
+
+                 */
             }
 
         });
@@ -153,9 +152,9 @@ public class HomeActivity extends AppCompatActivity {
         ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
     }
 
-    public void shareFile(File myFile){
+    public void shareFile(File myFile) {
         Intent intentShareFile = new Intent(Intent.ACTION_SEND);
-        if(myFile.exists()) {
+        if (myFile.exists()) {
             intentShareFile.setType("application/pdf");
             Uri myUri = FileProvider.getUriForFile(
                     HomeActivity.this,
@@ -187,6 +186,55 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Fix no activity available
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null)
+            return;
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    String FilePath = data.getData().getPath();
+                    //FilePath is your file as a string
+                    Log.v("filepath", FilePath);
+                }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length <= 0
+                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(HomeActivity.this, "Cannot write images to external storage", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if the app has permission to write to device storage
+     * <p/>
+
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity the activity from which permissions are checked
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+}
+
+    //graveyard
     /*
     private void noSKUMessage() {
         //do nothing?
@@ -268,7 +316,4 @@ public class HomeActivity extends AppCompatActivity {
                 });
     }
     */
-
-
-}
 

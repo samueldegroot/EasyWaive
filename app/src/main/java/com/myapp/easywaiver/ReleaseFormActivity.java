@@ -30,7 +30,8 @@ public class ReleaseFormActivity extends AppCompatActivity {
         String waiver_text = "I hereby grant " + organization + " the irrevocable right and permission to use photographs or video recordings (“photos”) of me on their websites and in publications, promotional flyers, educational materials, derivative works, or for any other similar purpose without compensation to me.\n\n" +
                 "I understand and agree that such photos of me may be placed on the Internet.  I also understand and agree that I may be identified by name or title in printed, Internet or broadcast information that might accompany the photos of me.  I waive the right to approve the final product.  I agree that all such portraits, pictures, photographs, video and audio recordings, and any reproductions thereof, and all plates, negatives, recording tape and digital files are and shall remain their property.\n\n" +
                 "I hereby release, acquit and forever discharge " + organization + " from any and all claims, demands, rights, promises, damages and liabilities arising out of or in connection with the use or distribution of said photos, including but not limited to any claims for invasion of privacy, appropriation of likeness or defamation.\n\n" +
-                "I hereby warrant that I am over 17 years of age and competent to contract in my own name.  This release is binding on me and my heirs, assigns and personal representatives.";
+                "I hereby warrant that I am over 17 years of age and competent to contract in my own name.  This release is binding on me and my heirs, assigns and personal representatives.\n\n" +
+                "I agree to receive email communication from " + organization + ".";
 
         TextView tv = findViewById(R.id.waiver_text);
         ScrollView sv = findViewById(R.id.scrollView2);

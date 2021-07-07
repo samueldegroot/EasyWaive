@@ -1,6 +1,5 @@
 package com.myapp.easywaiver;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,9 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
@@ -41,8 +38,6 @@ import java.util.Locale;
 
 public class MainActivity extends Activity {
 
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static final String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     private SignaturePad mSignaturePad;
     private Button mClearButton;
     private Button mSaveButton;
@@ -53,7 +48,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
         String waiver_text = getIntent().getStringExtra("waiver");
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
@@ -118,20 +112,6 @@ public class MainActivity extends Activity {
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length <= 0
-                        || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "Cannot write images to external storage", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
     public File getDocumentStorageDir(String albumName) {
         // Get the directory for the user's public pictures directory.
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), albumName);
@@ -182,24 +162,6 @@ public class MainActivity extends Activity {
             this.grantUriPermission(packageName, contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         MainActivity.this.sendBroadcast(mediaScanIntent);
-    }
-
-    /**
-     * Checks if the app has permission to write to device storage
-     * <p/>
-
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity the activity from which permissions are checked
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-        }
     }
 
     public void writeEmail(String email) throws FileNotFoundException {
