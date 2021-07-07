@@ -9,9 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -45,6 +49,8 @@ public class HomeActivity extends AppCompatActivity {
     private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
     private static final int PICKFILE_RESULT_CODE = 8778;
+    String organization;
+    String banner;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
@@ -54,17 +60,25 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar myToolbar = findViewById(R.id.home_toolbar);
         setActionBar(myToolbar);
+        myToolbar.inflateMenu(R.menu.menu);
         verifyStoragePermissions(this);
         //getActionBar().setIcon(R.mipmap.ic_launcher_round); //icon too big to use :(
 
 
-        String organization = read_file(getApplicationContext(), "organization.txt");
-        //Toast.makeText(HomeActivity.this, organization, Toast.LENGTH_SHORT).show();
+        organization = read_file(getApplicationContext(), "organization.txt");
+        banner = read_file(getApplicationContext(), "banner.txt");
 
         Button new_form_button = findViewById(R.id.new_form);
         Button org_button = findViewById(R.id.org);
         Button share_button = findViewById(R.id.share);
-        Button about_button = findViewById(R.id.about);
+        org_button.setText("View Forms");
+        TextView banner_tv = findViewById(R.id.banner_tv);
+        if (banner == "Organization Name") {
+            banner = "Welcome";
+        }
+        else {
+            banner_tv.setText(banner);
+        }
 
         //get last signed pdf, if exists enable share button
         File lastPdf = (File) getIntent().getSerializableExtra("pdfFile");
@@ -141,10 +155,39 @@ public class HomeActivity extends AppCompatActivity {
                 shareFile(lastPdf);
             }
         });
+    }
 
-        about_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
+        ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent myIntent;
+        switch ( item.getItemId( ) ) {
+            case R.id.change_org:
+                myIntent = new Intent(HomeActivity.this, ChangeOrgActivity.class);
+                myIntent.putExtra("org", organization);
+                HomeActivity.this.startActivity(myIntent);
+                return true;
+
+            case R.id.set_banner:
+                myIntent = new Intent(HomeActivity.this, SetBannerActivity.class);
+                myIntent.putExtra("banner", banner);
+                HomeActivity.this.startActivity(myIntent);
+                return true;
+
+            case R.id.about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
                 // Add the buttons
                 builder.setPositiveButton(R.string.back, null);
@@ -155,15 +198,13 @@ public class HomeActivity extends AppCompatActivity {
                 // Create the AlertDialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
-            }
-        });
-    }
+                return true;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
-        ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void shareFile(File myFile) {
