@@ -6,6 +6,10 @@
             android:title="@string/view_forms"
             app:showAsAction="never" />
         <item
+            android:id="@+id/set_email"
+            android:title="@string/set_email"
+            app:showAsAction="never"/>
+        <item
             android:id="@+id/set_banner"
             android:title="Set Welcome Message"
             app:showAsAction="never"/>

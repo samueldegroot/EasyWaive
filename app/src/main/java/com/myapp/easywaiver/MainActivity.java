@@ -43,8 +43,8 @@ public class MainActivity extends Activity {
     private Button mSaveButton;
     int pageHeight = 1120;
     int pageWidth = 792;
-    String fromEmail;
-    String fromPassword;
+    final private String fromEmail = "easyphotowaiver@gmail.com";
+    final private String fromPassword = "myFakeEmail";
     String toEmailList;
     String emailSubject;
     String emailBody;
@@ -56,6 +56,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         String waiver_text = getIntent().getStringExtra("waiver");
+        String org_email = getIntent().getStringExtra("org_email");
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setActionBar(myToolbar);
 
@@ -113,14 +114,11 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                fromEmail = "easyphotowaiver@gmail.com";
-                fromPassword = "myFakeEmail";
                 //toEmailList = emailStr;
-                toEmailList = "samueldegroot@yahoo.com";
+                toEmailList = "samueldegroot@yahoo.com"; //test
                 emailSubject = "Photo and Video Recording Release Form";
                 emailBody = "Email body";
-                //emailCC = orgEmail;
-                emailCC = "degrootsamuel@gmail.com";
+                emailCC = org_email;
 
                 createPDF(nameStr, waiver_text, signatureBitmap);
             }

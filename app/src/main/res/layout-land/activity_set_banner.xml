@@ -46,7 +46,7 @@
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:hint="Welcome message"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:paddingVertical="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -52,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final int UPLOAD_REQUEST_CODE = 8778;
     String organization;
     String banner;
+    String org_email;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
@@ -68,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
 
         organization = read_file(getApplicationContext(), "organization.txt");
         banner = read_file(getApplicationContext(), "banner.txt");
+        org_email = read_file(getApplicationContext(), "org_email.txt");
 
         Button new_form_button = findViewById(R.id.new_form);
         Button org_button = findViewById(R.id.org);
@@ -78,8 +80,10 @@ public class HomeActivity extends AppCompatActivity {
         if (banner == "Organization Name") {
             banner = "Welcome";
         }
-        else {
-            banner_tv.setText(banner);
+        banner_tv.setText(banner);
+
+        if (org_email == "Organization Name") {
+            org_email = "Organization Email";
         }
 
         share_button.setEnabled(true);
@@ -124,6 +128,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (isActive) {
                     Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
                     myIntent.putExtra("org", organization);
+                    myIntent.putExtra("org_email", org_email);
                     HomeActivity.this.startActivity(myIntent);
                 } else {
                     ewr.billingDataSource.launchBillingFlow(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
@@ -190,6 +195,12 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.change_org:
                 myIntent = new Intent(HomeActivity.this, ChangeOrgActivity.class);
                 myIntent.putExtra("org", organization);
+                HomeActivity.this.startActivity(myIntent);
+                return true;
+
+            case R.id.set_email:
+                myIntent = new Intent(HomeActivity.this, SetEmailActivity.class);
+                myIntent.putExtra("org_email", org_email);
                 HomeActivity.this.startActivity(myIntent);
                 return true;
 

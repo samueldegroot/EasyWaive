@@ -16,11 +16,12 @@
     <string name="about">About</string>
     <string name="back">Back</string>
     <string name="dialog_message">EasyWaive is designed to facilitate the collection of Photo and Video Recording Release Forms. To get started, set your organization name that the forms will apply to. Select new form to begin filling out a new waiver. After the signer is finished, you can choose to share the most recently signed pdf document by selecting upload pdf. All documents can also be found in Documents/EasyWaive/ in this phone\'s storage, along with a list of all entered emails. Use of this application requires a subscription, or you can try it out with a 1 week free trial.</string>
-    <string name="continue_button">Continue</string>
-    <string name="thanks">Thank You!</string>
+    <string name="continue_button">Finished</string>
+    <string name="thanks">Thank You! A copy of your release form will be sent to the email you provided.</string>
     <string name="welcome">Welcome!</string>
     <string name="set_org">Set your organization name</string>
     <string name="input">Type your name and email address, then sign the pad and save</string>
     <string name="set_banner">Set your welcome message</string>
+    <string name="set_email">Set Org Email</string>
 
 </resources>

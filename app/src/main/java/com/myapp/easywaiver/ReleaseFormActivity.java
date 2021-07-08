@@ -24,6 +24,7 @@ public class ReleaseFormActivity extends AppCompatActivity {
         setActionBar(myToolbar);
 
         String organization = getIntent().getStringExtra("org");
+        String org_email = getIntent().getStringExtra("org_email");
         organization = organization.replace("\n", "");
 
         //String organization = "Monica De La Cruz-Hernandez Campaign";
@@ -64,6 +65,7 @@ public class ReleaseFormActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent myIntent = new Intent(ReleaseFormActivity.this, MainActivity.class);
                 myIntent.putExtra("waiver", waiver_text);
+                myIntent.putExtra("org_email", org_email);
                 ReleaseFormActivity.this.startActivity(myIntent);
             }
 

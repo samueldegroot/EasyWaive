@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".SetBannerActivity"></activity>
+        <activity android:name=".SetEmailActivity"></activity>
+        <activity android:name=".SetBannerActivity" />
         <activity android:name=".ChangeOrgActivity" />
 
         <provider

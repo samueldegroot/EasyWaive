@@ -4,26 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.myapp.easywaiver.SetBannerActivity">
+    tools:context="com.myapp.easywaiver.SetEmailActivity">
 
     <TextView
-        android:id="@+id/set_banner"
+        android:id="@+id/set_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="@string/set_banner"
+        android:text="@string/set_email"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/banner_tv"
+        app:layout_constraintBottom_toTopOf="@+id/email_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/banner_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/email_toolbar" />
 
     <android.widget.Toolbar
-        android:id="@+id/banner_toolbar"
+        android:id="@+id/email_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/blue_grey"
@@ -35,37 +33,37 @@
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         android:titleTextColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/set_banner"
+        app:layout_constraintBottom_toTopOf="@id/set_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <EditText
-        android:id="@+id/banner_tv"
+        android:id="@+id/email_tv"
         android:layout_width="298dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:hint="Welcome message"
-        android:inputType="text"
+        android:hint="Organization Email"
+        android:inputType="textEmailAddress"
         android:paddingVertical="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/set_banner"
-        app:layout_constraintBottom_toTopOf="@id/banner_buttons_container"/>
+        app:layout_constraintTop_toBottomOf="@id/set_email"
+        app:layout_constraintBottom_toTopOf="@id/email_buttons_container"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/banner_buttons_container"
+        android:id="@+id/email_buttons_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/banner_tv">
+        app:layout_constraintTop_toBottomOf="@+id/email_tv">
 
         <Button
-            android:id="@+id/banner_button"
+            android:id="@+id/email_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
@@ -76,7 +74,7 @@
             android:paddingVertical="24dp"
             android:text="@string/org"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline9"
             app:layout_constraintStart_toEndOf="@+id/back_button"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -85,16 +83,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:enabled="true"
             android:paddingVertical="24dp"
             android:text="@string/back"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/banner_button"
+            app:layout_constraintEnd_toStartOf="@+id/email_button"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline7"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.15" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.85" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -102,6 +114,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.65" />
+        app:layout_constraintGuide_percent="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
