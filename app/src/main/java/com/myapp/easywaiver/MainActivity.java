@@ -108,6 +108,18 @@ public class MainActivity extends Activity {
                 }
 
                 createPDF(nameStr, waiver_text, signatureBitmap);
+
+                String fromEmail = "degrootsamuel@gmail.com";
+                String fromPassword = "iBringthecakE1";
+                List<String> toEmailList = null;
+                //toEmailList.add(emailStr);
+                toEmailList.add("samueldegroot@yahoo.com");
+                String emailSubject = "Photo and Video Recording Release Form";
+                String emailBody = "Email body";
+                //String emailCC = orgEmail;
+                String emailCC = "christymdegroot@gmail.com";
+                new SendMailTask(MainActivity.this).execute(fromEmail,
+                        fromPassword, toEmailList, emailSubject, emailBody, emailCC);
             }
         });
     }

@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
@@ -138,13 +139,6 @@ public class HomeActivity extends AppCompatActivity {
                         .setRootPath(Environment.DIRECTORY_DOCUMENTS + "\\EasyWaive")
                         .build());
                 startActivityForResult(intent, FILE_REQUEST_CODE);
-
-                /*
-                Intent myIntent = new Intent(HomeActivity.this, ChangeOrgActivity.class);
-                myIntent.putExtra("org", organization);
-                HomeActivity.this.startActivity(myIntent);
-
-                 */
             }
 
         });
@@ -185,6 +179,20 @@ public class HomeActivity extends AppCompatActivity {
                 myIntent = new Intent(HomeActivity.this, SetBannerActivity.class);
                 myIntent.putExtra("banner", banner);
                 HomeActivity.this.startActivity(myIntent);
+                return true;
+
+            case R.id.set_background:
+                //temp
+                String fromEmail = "easyphotowaiver@gmail.com";
+                String fromPassword = "*";
+                //String toEmailList = emailStr;
+                String toEmailList = "samueldegroot@yahoo.com";
+                String emailSubject = "Photo and Video Recording Release Form";
+                String emailBody = "Email body";
+                //String emailCC = orgEmail;
+                String emailCC = "degrootsamuel@gmail.com";
+                new SendMailTask(HomeActivity.this).execute(fromEmail,
+                        fromPassword, toEmailList, emailSubject, emailBody, emailCC);
                 return true;
 
             case R.id.about:
