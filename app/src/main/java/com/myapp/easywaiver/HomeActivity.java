@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final int FILE_REQUEST_CODE = 8777;
     private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
-    private static final int PICKFILE_RESULT_CODE = 8778;
+    private static final int UPLOAD_REQUEST_CODE = 8778;
     String organization;
     String banner;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -106,7 +106,7 @@ public class HomeActivity extends AppCompatActivity {
         Runnable r = new Runnable() {
             public void run() {
                 ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
-                Log.v("isActive", isActive.toString());
+                //Log.v("isActive", isActive.toString());
             }
         };
         handler.postDelayed(r, 500);
@@ -127,7 +127,6 @@ public class HomeActivity extends AppCompatActivity {
         org_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //temp, uncomment share
                 Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
                 intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
                         .setCheckPermission(true)
@@ -136,7 +135,7 @@ public class HomeActivity extends AppCompatActivity {
                         .setShowFiles(true)
                         .setSingleChoiceMode(false)
                         .setSuffixes("pdf", "csv")
-                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "\\EasyWaive")
+                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyWaive")
                         .build());
                 startActivityForResult(intent, FILE_REQUEST_CODE);
             }
@@ -182,20 +181,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.set_background:
-
-                //temp
-                String fromEmail = "easyphotowaiver@gmail.com";
-                String fromPassword = "myFakeEmail";
-                //String toEmailList = emailStr;
-                String toEmailList = "samueldegroot@yahoo.com";
-                String emailSubject = "Photo and Video Recording Release Form";
-                String emailBody = "Email body";
-                //String emailCC = orgEmail;
-                String emailCC = "degrootsamuel@gmail.com";
-                new SendMailTask(HomeActivity.this).execute(fromEmail,
-                        fromPassword, toEmailList, emailSubject, emailBody, emailCC);
-
-
+                //set background
                 return true;
 
             case R.id.about:
@@ -259,9 +245,18 @@ public class HomeActivity extends AppCompatActivity {
             switch (requestCode) {
                 case FILE_REQUEST_CODE:
                     ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
-                    for (MediaFile file : files) {
-                        Log.v(TAG, file.getName());
-                    }
+                    MediaFile file = files.get(0);
+
+                    /*
+                    File myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/"+file.getName());
+                    Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", myFile);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(uri, "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(intent);
+
+                     */
                     break;
             }
         }

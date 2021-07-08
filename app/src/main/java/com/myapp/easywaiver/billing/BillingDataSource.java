@@ -709,7 +709,7 @@ public class BillingDataSource implements LifecycleObserver, PurchasesUpdatedLis
                         }
                     });
         }
-        Log.v("result", result.get().toString());
+        //Log.v("result", result.get().toString());
         return result.get();
     }
     /**
