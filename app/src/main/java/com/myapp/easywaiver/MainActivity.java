@@ -153,7 +153,7 @@ public class MainActivity extends Activity {
             builder.setPositiveButton(R.string.continue_button, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
-                    myIntent.putExtra("pdfFile", pdf);
+                    //myIntent.putExtra("pdfFile", pdf);
                     MainActivity.this.startActivity(myIntent);
                 }
             });

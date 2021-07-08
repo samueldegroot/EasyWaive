@@ -73,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         Button org_button = findViewById(R.id.org);
         Button share_button = findViewById(R.id.share);
         org_button.setText("View Forms");
+        share_button.setText("Upload Forms");
         TextView banner_tv = findViewById(R.id.banner_tv);
         if (banner == "Organization Name") {
             banner = "Welcome";
@@ -81,12 +82,18 @@ public class HomeActivity extends AppCompatActivity {
             banner_tv.setText(banner);
         }
 
+        share_button.setEnabled(true);
+        share_button.setAlpha(1);
+
+        /*
         //get last signed pdf, if exists enable share button
         File lastPdf = (File) getIntent().getSerializableExtra("pdfFile");
         if (lastPdf != null) {
             share_button.setEnabled(true);
             share_button.setAlpha(1);
         }
+
+         */
 
         // Create our Activity ViewModel, which exists to handle global Snackbar messages
         HomeActivityViewModel.HomeActivityViewModelFactory homeActivityViewModelFactory = new
@@ -135,7 +142,7 @@ public class HomeActivity extends AppCompatActivity {
                         .setShowFiles(true)
                         .setSingleChoiceMode(false)
                         .setSuffixes("pdf", "csv")
-                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyWaive")
+                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
                         .build());
                 startActivityForResult(intent, FILE_REQUEST_CODE);
             }
@@ -145,7 +152,19 @@ public class HomeActivity extends AppCompatActivity {
         share_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                shareFile(lastPdf);
+                Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
+                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                        .setCheckPermission(true)
+                        .setShowImages(false)
+                        .setShowVideos(false)
+                        .setShowFiles(true)
+                        .setSingleChoiceMode(false)
+                        .setSuffixes("pdf", "csv")
+                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
+                        .build());
+                startActivityForResult(intent, UPLOAD_REQUEST_CODE);
+
+                //shareFile(lastPdf);
             }
         });
     }
@@ -204,13 +223,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void shareFile(File myFile) {
+    public void shareFile(File myFile, String mimeType) {
         Intent intentShareFile = new Intent(Intent.ACTION_SEND);
         if (myFile.exists()) {
-            intentShareFile.setType("application/pdf");
+            intentShareFile.setType(mimeType);
             Uri myUri = FileProvider.getUriForFile(
                     HomeActivity.this,
-                    "com.myapp.easywaiver.provider", //(use your app signature + ".provider" )
+                    getPackageName() + ".provider", //(use your app signature + ".provider" )
                     myFile);
             intentShareFile.putExtra(Intent.EXTRA_STREAM, myUri);
 
@@ -242,21 +261,31 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
+            ArrayList<MediaFile> files;
+            MediaFile file;
+            File myFile;
             switch (requestCode) {
                 case FILE_REQUEST_CODE:
-                    ArrayList<MediaFile> files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
-                    MediaFile file = files.get(0);
+                    files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+                    file = files.get(0);
+                    myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/EasyPhotoWaiver/"+file.getName());
+                    if (myFile.exists()) {
+                        Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", myFile);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(uri, file.getMimeType());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        startActivity(intent);
+                    }
 
-                    /*
-                    File myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/"+file.getName());
-                    Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", myFile);
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(uri, "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(intent);
+                    break;
 
-                     */
+                case UPLOAD_REQUEST_CODE:
+                    files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+                    file = files.get(0);
+                    myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/EasyPhotoWaiver/"+file.getName());
+                    shareFile(myFile, file.getMimeType());
+
                     break;
             }
         }
