@@ -43,6 +43,12 @@ public class MainActivity extends Activity {
     private Button mSaveButton;
     int pageHeight = 1120;
     int pageWidth = 792;
+    String fromEmail;
+    String fromPassword;
+    String toEmailList;
+    String emailSubject;
+    String emailBody;
+    String emailCC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,19 +113,16 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                createPDF(nameStr, waiver_text, signatureBitmap);
+                fromEmail = "easyphotowaiver@gmail.com";
+                fromPassword = "myFakeEmail";
+                //toEmailList = emailStr;
+                toEmailList = "samueldegroot@yahoo.com";
+                emailSubject = "Photo and Video Recording Release Form";
+                emailBody = "Email body";
+                //emailCC = orgEmail;
+                emailCC = "degrootsamuel@gmail.com";
 
-                String fromEmail = "degrootsamuel@gmail.com";
-                String fromPassword = "iBringthecakE1";
-                List<String> toEmailList = null;
-                //toEmailList.add(emailStr);
-                toEmailList.add("samueldegroot@yahoo.com");
-                String emailSubject = "Photo and Video Recording Release Form";
-                String emailBody = "Email body";
-                //String emailCC = orgEmail;
-                String emailCC = "christymdegroot@gmail.com";
-                new SendMailTask(MainActivity.this).execute(fromEmail,
-                        fromPassword, toEmailList, emailSubject, emailBody, emailCC);
+                createPDF(nameStr, waiver_text, signatureBitmap);
             }
         });
     }
@@ -136,7 +139,9 @@ public class MainActivity extends Activity {
 
     public void addPDFToDocuments(PdfDocument pdfDocument, String name) {
         try {
-            File pdf = new File(getDocumentStorageDir("EasyWaive"), String.format("%s Release Form.pdf", name));
+            String pdfName = String.format("%s Release Form.pdf", name);
+            File pdf = new File(getDocumentStorageDir("EasyPhotoWaiver"), pdfName);
+            new SendMailTask(MainActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, emailCC, pdfName);
             pdfDocument.writeTo(new FileOutputStream(pdf));
             scanMediaFile(pdf);
             pdfDocument.close();
@@ -177,9 +182,9 @@ public class MainActivity extends Activity {
     }
 
     public void writeEmail(String email) throws FileNotFoundException {
-        //File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyWaive/emails.csv");
-        //File file = new File(getExternalFilesDir(null), "EasyWaive/emails.csv");
-        File file = new File(getDocumentStorageDir("EasyWaive"), "emails.csv");
+        //File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyPhotoWaiver/emails.csv");
+        //File file = new File(getExternalFilesDir(null), "EasyPhotoWaiver/emails.csv");
+        File file = new File(getDocumentStorageDir("EasyPhotoWaiver"), "emails.csv");
         FileOutputStream fos = new FileOutputStream(file, true);
         try {
             fos.write(email.getBytes());
@@ -341,7 +346,7 @@ public class MainActivity extends Activity {
     public boolean addJpgSignatureToGallery(Bitmap signature) {
         boolean result = false;
         try {
-            File photo = new File(getAlbumStorageDir("EasyWaive"), String.format("Signature_%d.jpg", System.currentTimeMillis()));
+            File photo = new File(getAlbumStorageDir("EasyPhotoWaiver"), String.format("Signature_%d.jpg", System.currentTimeMillis()));
             saveBitmapToJPG(signature, photo);
             scanMediaFile(photo);
             result = true;

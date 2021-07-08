@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EasyWaive</string>
+    <string name="app_name">EasyPhotoWaiver</string>
     <string name="agreement">I agree to the terms and conditions.</string>
     <string name="clear_pad">Clear Pad</string>
     <string name="save_signature">Save Signature</string>

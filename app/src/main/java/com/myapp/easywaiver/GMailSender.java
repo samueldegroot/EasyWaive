@@ -1,9 +1,10 @@
 package com.myapp.easywaiver;
 
+import android.os.Environment;
 import android.util.Log;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -35,24 +36,25 @@ public class GMailSender {
     String emailSubject;
     String emailBody;
     String emailCC;
+    String pdfName;
 
     Properties emailProperties;
     Session mailSession;
     MimeMessage emailMessage;
-    private Multipart _multipart = new MimeMultipart();
 
     public GMailSender() {
 
     }
 
     public GMailSender(String fromEmail, String fromPassword,
-                 String toEmailList, String emailSubject, String emailBody, String emailCC) {
+                 String toEmailList, String emailSubject, String emailBody, String emailCC, String pdfName) {
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
         this.emailSubject = emailSubject;
         this.emailBody = emailBody;
         this.emailCC = emailCC;
+        this.pdfName = pdfName;
 
         emailProperties = System.getProperties();
         emailProperties.put("mail.smtp.port", emailPort);
@@ -76,8 +78,26 @@ public class GMailSender {
         emailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(emailCC));
 
         emailMessage.setSubject(emailSubject);
-        emailMessage.setContent(emailBody, "text/html");// for a html email
-        // emailMessage.setText(emailBody);// for a text email
+        //emailMessage.setContent(emailBody, "text/html");// for a html email
+        //emailMessage.setText(emailBody);// for a text email
+
+        //attachment
+        BodyPart messageBodyPart1 = new MimeBodyPart();
+        messageBodyPart1.setText(emailBody);
+
+        MimeBodyPart messageBodyPart2 = new MimeBodyPart();
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyPhotoWaiver/" + pdfName);
+        DataSource source = new FileDataSource(file);
+        messageBodyPart2.setDataHandler(new DataHandler(source));
+        messageBodyPart2.setFileName(pdfName);
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(messageBodyPart1);
+        multipart.addBodyPart(messageBodyPart2);
+
+        emailMessage.setContent(multipart);
+
         Log.i("GMail", "Email Message created.");
         return emailMessage;
     }
@@ -90,19 +110,6 @@ public class GMailSender {
         transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
         transport.close();
         Log.i("GMail", "Email sent successfully.");
-    }
-
-    public void addAttachment(String filename,String subject) throws Exception {
-        BodyPart messageBodyPart = new MimeBodyPart();
-        DataSource source = new FileDataSource(filename);
-        messageBodyPart.setDataHandler(new DataHandler(source));
-        messageBodyPart.setFileName(filename);
-        _multipart.addBodyPart(messageBodyPart);
-
-        BodyPart messageBodyPart2 = new MimeBodyPart();
-        messageBodyPart2.setText(subject);
-
-        _multipart.addBodyPart(messageBodyPart2);
     }
 
 }

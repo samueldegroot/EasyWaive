@@ -182,9 +182,10 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.set_background:
+
                 //temp
                 String fromEmail = "easyphotowaiver@gmail.com";
-                String fromPassword = "*";
+                String fromPassword = "myFakeEmail";
                 //String toEmailList = emailStr;
                 String toEmailList = "samueldegroot@yahoo.com";
                 String emailSubject = "Photo and Video Recording Release Form";
@@ -193,6 +194,8 @@ public class HomeActivity extends AppCompatActivity {
                 String emailCC = "degrootsamuel@gmail.com";
                 new SendMailTask(HomeActivity.this).execute(fromEmail,
                         fromPassword, toEmailList, emailSubject, emailBody, emailCC);
+
+
                 return true;
 
             case R.id.about:
