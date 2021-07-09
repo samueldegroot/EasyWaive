@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/email_constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.myapp.easywaiver.SetEmailActivity">
@@ -50,10 +51,10 @@
         android:hint="Organization Email"
         android:inputType="textEmailAddress"
         android:paddingVertical="24dp"
+        app:layout_constraintBottom_toTopOf="@id/email_buttons_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/set_email"
-        app:layout_constraintBottom_toTopOf="@id/email_buttons_container"/>
+        app:layout_constraintTop_toBottomOf="@id/set_email" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/email_buttons_container"

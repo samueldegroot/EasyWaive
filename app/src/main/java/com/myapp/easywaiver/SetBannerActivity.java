@@ -24,13 +24,18 @@ public class SetBannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_banner);
-        String banner = getIntent().getStringExtra("banner");
+        String banner = HomeActivity.loadString(this, "banner", "Welcome!", getString(R.string.preference_file_key));
         EditText editText = findViewById(R.id.banner_tv);
         editText.setHint(banner);
         Button banner_button = findViewById(R.id.banner_button);
         Button back_button = findViewById(R.id.back_button);
         Toolbar myToolbar = findViewById(R.id.banner_toolbar);
         setActionBar(myToolbar);
+
+        View myView = findViewById(R.id.banner_constraint);
+
+        //set background
+        HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
 
         //enable update button after user types something
         editText.addTextChangedListener(new TextWatcher() {
@@ -65,8 +70,11 @@ public class SetBannerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String string = editText.getText().toString();
-                String FILENAME = "banner.txt";
+                //String FILENAME = "banner.txt";
 
+                HomeActivity.saveString(SetBannerActivity.this, "banner", string, getString(R.string.preference_file_key));
+
+                /*
                 FileOutputStream fos = null;
                 try {
                     fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -84,8 +92,10 @@ public class SetBannerActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                 */
+
                 Intent myIntent = new Intent(SetBannerActivity.this, HomeActivity.class);
-                myIntent.putExtra("banner", string);
+                //myIntent.putExtra("banner", string);
                 SetBannerActivity.this.startActivity(myIntent);
             }
         });

@@ -23,5 +23,9 @@
     <string name="input">Type your name and email address, then sign the pad and save</string>
     <string name="set_banner">Set your welcome message</string>
     <string name="set_email">Set Org Email</string>
+    <string name="set_background">Set Background</string>
+    <string name="flag">Flag</string>
+    <string name="default_bg">Default</string>
+    <string name="preference_file_key">shared</string>
 
 </resources>

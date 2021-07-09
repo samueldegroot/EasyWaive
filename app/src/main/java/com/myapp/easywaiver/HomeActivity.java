@@ -3,14 +3,14 @@ package com.myapp.easywaiver;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,8 +38,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
-
 
 import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
 
@@ -50,9 +48,11 @@ public class HomeActivity extends AppCompatActivity {
     private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
     private static final int UPLOAD_REQUEST_CODE = 8778;
+
     String organization;
     String banner;
     String org_email;
+
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
@@ -63,13 +63,22 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.home_toolbar);
         setActionBar(myToolbar);
         myToolbar.inflateMenu(R.menu.menu);
+        View myView = findViewById(R.id.home_constraint);
+
+        //set background
+        loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+
         verifyStoragePermissions(this);
         //getActionBar().setIcon(R.mipmap.ic_launcher_round); //icon too big to use :(
 
 
-        organization = read_file(getApplicationContext(), "organization.txt");
-        banner = read_file(getApplicationContext(), "banner.txt");
-        org_email = read_file(getApplicationContext(), "org_email.txt");
+        organization = loadString(this, "organization", "Organization Name", getString(R.string.preference_file_key));
+        banner = loadString(this, "banner", "Welcome!", getString(R.string.preference_file_key));
+        org_email = loadString(this, "org_email", "Organization Email", getString(R.string.preference_file_key));
+
+        //organization = read_file(getApplicationContext(), "organization.txt");
+        //banner = read_file(getApplicationContext(), "banner.txt");
+        //org_email = read_file(getApplicationContext(), "org_email.txt");
 
         Button new_form_button = findViewById(R.id.new_form);
         Button org_button = findViewById(R.id.org);
@@ -77,14 +86,7 @@ public class HomeActivity extends AppCompatActivity {
         org_button.setText("View Forms");
         share_button.setText("Upload Forms");
         TextView banner_tv = findViewById(R.id.banner_tv);
-        if (banner == "Organization Name") {
-            banner = "Welcome";
-        }
         banner_tv.setText(banner);
-
-        if (org_email == "Organization Name") {
-            org_email = "Organization Email";
-        }
 
         share_button.setEnabled(true);
         share_button.setAlpha(1);
@@ -179,6 +181,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
         ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
+        View myView = findViewById(R.id.home_constraint);
+        loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
     }
 
     @Override
@@ -194,27 +198,24 @@ public class HomeActivity extends AppCompatActivity {
         switch ( item.getItemId( ) ) {
             case R.id.change_org:
                 myIntent = new Intent(HomeActivity.this, ChangeOrgActivity.class);
-                myIntent.putExtra("org", organization);
+                //myIntent.putExtra("org", organization);
                 HomeActivity.this.startActivity(myIntent);
                 return true;
 
             case R.id.set_email:
                 myIntent = new Intent(HomeActivity.this, SetEmailActivity.class);
-                myIntent.putExtra("org_email", org_email);
+                //myIntent.putExtra("org_email", org_email);
                 HomeActivity.this.startActivity(myIntent);
                 return true;
 
             case R.id.set_banner:
                 myIntent = new Intent(HomeActivity.this, SetBannerActivity.class);
-                myIntent.putExtra("banner", banner);
+                //myIntent.putExtra("banner", banner);
                 HomeActivity.this.startActivity(myIntent);
                 return true;
 
-            case R.id.set_background:
-                //set background
-                return true;
-
             case R.id.about:
+                //set background
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
                 // Add the buttons
                 builder.setPositiveButton(R.string.back, null);
@@ -225,6 +226,44 @@ public class HomeActivity extends AppCompatActivity {
                 // Create the AlertDialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                return true;
+
+            case R.id.set_background:
+                AlertDialog.Builder builder_radio = new AlertDialog.Builder(HomeActivity.this);
+                // Add the buttons
+                builder_radio.setPositiveButton(R.string.back, null);
+                // Set other dialog properties
+                builder_radio.setTitle(R.string.set_background)
+                             .setItems(new String[]{"Default", "Flag", "Custom"}, new DialogInterface.OnClickListener() {
+                                 @Override
+                                 public void onClick(DialogInterface dialog, int which) {
+                                     SharedPreferences sp = HomeActivity.this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                                     SharedPreferences.Editor editor = sp.edit();
+                                     switch(which) {
+                                         case 0:
+                                             //set to default
+                                             editor.putInt("backgroundNum", 0);
+                                             editor.apply();
+                                             break;
+                                         case 1:
+                                             //set to flag
+                                             editor.putInt("backgroundNum", 1);
+                                             editor.apply();
+                                             break;
+                                         case 2:
+                                             //set to custom
+                                             editor.putInt("backgroundNum", 2);
+                                             editor.apply();
+                                             //ask to upload background
+                                             break;
+                                     }
+                                     Toast.makeText(HomeActivity.this, "Please restart app to show changes", Toast.LENGTH_SHORT).show();
+                                 }
+                             });
+
+                // Create the AlertDialog
+                AlertDialog dialog_radio = builder_radio.create();
+                dialog_radio.show();
                 return true;
 
             default:
@@ -245,26 +284,6 @@ public class HomeActivity extends AppCompatActivity {
             intentShareFile.putExtra(Intent.EXTRA_STREAM, myUri);
 
             this.startActivity(Intent.createChooser(intentShareFile, "Upload signed form"));
-        }
-    }
-
-    public String read_file(Context context, String filename) {
-        try {
-            FileInputStream fis = context.openFileInput(filename);
-            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            return sb.toString();
-        } catch (FileNotFoundException e) {
-            return "Organization Name";
-        } catch (UnsupportedEncodingException e) {
-            return "Organization Name";
-        } catch (IOException e) {
-            return "Organization Name";
         }
     }
 
@@ -333,10 +352,60 @@ public class HomeActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
         }
     }
+
+    public static void loadAndSetBackground(Activity activity, View myView, String key) {
+        SharedPreferences sp = activity.getSharedPreferences(key, Context.MODE_PRIVATE);
+        int backgroundNum = sp.getInt("backgroundNum",0);
+        switch(backgroundNum) {
+            case 1:
+                myView.setBackgroundResource(R.drawable.flag);
+                myView.getBackground().setAlpha(127);
+                break;
+            case 2:
+                break;
+            default:
+                myView.setBackgroundResource(0);
+                //myView.getBackground().setAlpha(255);
+                break;
+        }
+    }
+
+    public static void saveString(Activity activity, String saveKey, String input, String prefKey) {
+        SharedPreferences sp = activity.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(saveKey, input);
+        editor.apply();
+    }
+
+    public static String loadString(Activity activity, String saveKey, String defValue, String prefKey) {
+        SharedPreferences sp = activity.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+        return sp.getString(saveKey, defValue);
+    }
+
 }
 
     //graveyard
     /*
+    public String read_file(Context context, String filename) {
+        try {
+            FileInputStream fis = context.openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            return "Organization Name";
+        } catch (UnsupportedEncodingException e) {
+            return "Organization Name";
+        } catch (IOException e) {
+            return "Organization Name";
+        }
+    }
+
     private void noSKUMessage() {
         //do nothing?
     }

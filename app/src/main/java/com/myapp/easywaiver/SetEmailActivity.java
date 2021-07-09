@@ -23,13 +23,18 @@ public class SetEmailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_email);
-        String email = getIntent().getStringExtra("org_email");
+        String email = HomeActivity.loadString(this, "org_email", "Organization Email", getString(R.string.preference_file_key));
         EditText editText = findViewById(R.id.email_tv);
         editText.setHint(email);
         Button email_button = findViewById(R.id.email_button);
         Button back_button = findViewById(R.id.back_button);
         Toolbar myToolbar = findViewById(R.id.email_toolbar);
         setActionBar(myToolbar);
+
+        View myView = findViewById(R.id.email_constraint);
+
+        //set background
+        HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
 
         //enable update button after user types something
         editText.addTextChangedListener(new TextWatcher() {
@@ -64,8 +69,11 @@ public class SetEmailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String string = editText.getText().toString();
-                String FILENAME = "org_email.txt";
+                //String FILENAME = "org_email.txt";
 
+                HomeActivity.saveString(SetEmailActivity.this, "org_email", string, getString(R.string.preference_file_key));
+
+                /*
                 FileOutputStream fos = null;
                 try {
                     fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -83,8 +91,10 @@ public class SetEmailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                 */
+
                 Intent myIntent = new Intent(SetEmailActivity.this, HomeActivity.class);
-                myIntent.putExtra("email", string);
+                //myIntent.putExtra("email", string);
                 SetEmailActivity.this.startActivity(myIntent);
             }
         });

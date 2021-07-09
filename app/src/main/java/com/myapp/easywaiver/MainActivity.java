@@ -60,6 +60,11 @@ public class MainActivity extends Activity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setActionBar(myToolbar);
 
+        View myView = findViewById(R.id.main_constraint);
+
+        //set background
+        HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
 
         mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
@@ -114,8 +119,8 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                //toEmailList = emailStr;
-                toEmailList = "samueldegroot@yahoo.com"; //test
+                toEmailList = emailStr;
+                //toEmailList = "samueldegroot@yahoo.com"; //test
                 emailSubject = "Photo and Video Recording Release Form";
                 emailBody = "Email body";
                 emailCC = org_email;

@@ -1,6 +1,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:signature="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
@@ -48,8 +49,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Name"
+        android:inputType="textPersonName"
         signature:layout_constraintBottom_toTopOf="@+id/email_text"
         signature:layout_constraintLeft_toLeftOf="parent"
         signature:layout_constraintRight_toRightOf="parent"
@@ -65,8 +66,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:inputType="textEmailAddress"
         android:hint="Email"
+        android:inputType="textEmailAddress"
         signature:layout_constraintBottom_toTopOf="@+id/guideline6"
         signature:layout_constraintLeft_toLeftOf="parent"
         signature:layout_constraintRight_toRightOf="parent"
@@ -83,10 +84,10 @@
         android:id="@+id/signature_pad_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        signature:layout_constraintBottom_toTopOf="@id/buttons_container"
         signature:layout_constraintLeft_toLeftOf="parent"
         signature:layout_constraintRight_toRightOf="parent"
-        signature:layout_constraintTop_toBottomOf="@+id/guideline6"
-        signature:layout_constraintBottom_toTopOf="@id/buttons_container">
+        signature:layout_constraintTop_toBottomOf="@+id/guideline6">
 
         <TextView
             android:id="@+id/signature"
@@ -137,8 +138,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:enabled="false"
             android:alpha="0.3"
+            android:enabled="false"
             android:paddingVertical="24dp"
             android:text="@string/clear_pad"
             android:textColor="#FFFFFF" />
@@ -148,8 +149,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:enabled="false"
             android:alpha="0.3"
+            android:enabled="false"
             android:paddingVertical="24dp"
             android:text="@string/save_signature"
             android:textColor="#FFFFFF" />

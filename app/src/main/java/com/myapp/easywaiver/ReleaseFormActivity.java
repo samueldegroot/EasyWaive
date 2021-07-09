@@ -23,6 +23,11 @@ public class ReleaseFormActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.form_toolbar);
         setActionBar(myToolbar);
 
+        View myView = findViewById(R.id.release_constraint);
+
+        //set background
+        HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+
         String organization = getIntent().getStringExtra("org");
         String org_email = getIntent().getStringExtra("org_email");
         organization = organization.replace("\n", "");
