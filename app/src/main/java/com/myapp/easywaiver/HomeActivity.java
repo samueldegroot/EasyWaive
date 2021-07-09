@@ -7,6 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,13 +34,9 @@ import com.jaiselrahman.filepicker.activity.FilePickerActivity;
 import com.jaiselrahman.filepicker.config.Configurations;
 import com.jaiselrahman.filepicker.model.MediaFile;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
@@ -45,9 +45,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
     private static final int FILE_REQUEST_CODE = 8777;
+    private static final int UPLOAD_REQUEST_CODE = 8778;
+    private static final int IMAGE_REQUEST_CODE = 8779;
     private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
-    private static final int UPLOAD_REQUEST_CODE = 8778;
 
     String organization;
     String banner;
@@ -255,6 +256,15 @@ public class HomeActivity extends AppCompatActivity {
                                              editor.putInt("backgroundNum", 2);
                                              editor.apply();
                                              //ask to upload background
+                                             Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
+                                             intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                                                     .setCheckPermission(true)
+                                                     .setShowImages(true)
+                                                     .setShowVideos(false)
+                                                     .setSingleChoiceMode(true)
+                                                     //.setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
+                                                     .build());
+                                             startActivityForResult(intent, IMAGE_REQUEST_CODE);
                                              break;
                                      }
                                      Toast.makeText(HomeActivity.this, "Please restart app to show changes", Toast.LENGTH_SHORT).show();
@@ -317,6 +327,13 @@ public class HomeActivity extends AppCompatActivity {
                     shareFile(myFile, file.getMimeType());
 
                     break;
+                case IMAGE_REQUEST_CODE:
+                    files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+                    file = files.get(0);
+                    Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                    saveBackgroundToInternalStorage(bitmap);
+
+                    break;
             }
         }
     }
@@ -362,6 +379,9 @@ public class HomeActivity extends AppCompatActivity {
                 myView.getBackground().setAlpha(127);
                 break;
             case 2:
+                Drawable d = new BitmapDrawable(getBackground(activity));
+                myView.setBackground(d);
+                myView.getBackground().setAlpha(127);
                 break;
             default:
                 myView.setBackgroundResource(0);
@@ -382,6 +402,28 @@ public class HomeActivity extends AppCompatActivity {
         return sp.getString(saveKey, defValue);
     }
 
+    public boolean saveBackgroundToInternalStorage(Bitmap image) {
+        try {
+            FileOutputStream fos = this.openFileOutput("customBackground", Context.MODE_PRIVATE);
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static Bitmap getBackground(Activity activity) {
+        Bitmap thumbnail = null;
+        try {
+            File filePath = activity.getApplicationContext().getFileStreamPath("customBackground");
+            FileInputStream fi = new FileInputStream(filePath);
+            thumbnail = BitmapFactory.decodeStream(fi);
+        } catch (Exception ex) {
+            //Log.e("getThumbnail() on internal storage", ex.getMessage());
+        }
+        return thumbnail;
+    }
 }
 
     //graveyard
