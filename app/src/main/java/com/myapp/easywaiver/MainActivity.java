@@ -111,6 +111,7 @@ public class MainActivity extends Activity {
                 EditText email = findViewById(R.id.email_text);
                 String emailStr = email.getText().toString();
 
+                /*
                 if (emailStr.contains("@")) {
                     try {
                         writeEmail(emailStr);
@@ -118,6 +119,8 @@ public class MainActivity extends Activity {
                         e.printStackTrace();
                     }
                 }
+
+                 */
 
                 toEmailList = emailStr;
                 //toEmailList = "samueldegroot@yahoo.com"; //test
@@ -144,7 +147,6 @@ public class MainActivity extends Activity {
         try {
             String pdfName = String.format("%s Release Form.pdf", name);
             File pdf = new File(getDocumentStorageDir("EasyPhotoWaiver"), pdfName);
-            new SendMailTask(MainActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, emailCC, pdfName);
             pdfDocument.writeTo(new FileOutputStream(pdf));
             scanMediaFile(pdf);
             pdfDocument.close();
@@ -163,6 +165,12 @@ public class MainActivity extends Activity {
             // Set other dialog properties
             //builder.setMessage(R.string.dialog_message);
             builder.setTitle(R.string.thanks);
+            //do email stuff if user entered valid email
+            if (GMailSender.isValidEmail(toEmailList)) {
+                writeEmail(toEmailList);
+                new SendMailTask(MainActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, emailCC, pdfName);
+                builder.setMessage(R.string.thanks_message);
+            }
 
             // Create the AlertDialog
             AlertDialog dialog = builder.create();

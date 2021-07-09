@@ -75,7 +75,9 @@ public class GMailSender {
                 new InternetAddress(toEmailList));
 
         //add CC recipient
-        emailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(emailCC));
+        if (isValidEmail(emailCC)) {
+            emailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(emailCC));
+        }
 
         emailMessage.setSubject(emailSubject);
         //emailMessage.setContent(emailBody, "text/html");// for a html email
@@ -112,4 +114,16 @@ public class GMailSender {
         Log.i("GMail", "Email sent successfully.");
     }
 
+    public static boolean isValidEmail(String email) {
+        boolean isValid = false;
+        try {
+            InternetAddress internetAddress = new InternetAddress(email);
+            internetAddress.validate();
+            isValid = true;
+        }
+        catch (AddressException e) {
+            e.printStackTrace();
+        }
+        return isValid;
+    }
 }

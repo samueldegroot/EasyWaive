@@ -245,11 +245,13 @@ public class HomeActivity extends AppCompatActivity {
                                              //set to default
                                              editor.putInt("backgroundNum", 0);
                                              editor.apply();
+                                             Toast.makeText(HomeActivity.this, "Please restart app to show changes", Toast.LENGTH_SHORT).show();
                                              break;
                                          case 1:
                                              //set to flag
                                              editor.putInt("backgroundNum", 1);
                                              editor.apply();
+                                             Toast.makeText(HomeActivity.this, "Please restart app to show changes", Toast.LENGTH_SHORT).show();
                                              break;
                                          case 2:
                                              //set to custom
@@ -267,7 +269,6 @@ public class HomeActivity extends AppCompatActivity {
                                              startActivityForResult(intent, IMAGE_REQUEST_CODE);
                                              break;
                                      }
-                                     Toast.makeText(HomeActivity.this, "Please restart app to show changes", Toast.LENGTH_SHORT).show();
                                  }
                              });
 
