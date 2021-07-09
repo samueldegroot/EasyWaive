@@ -14,6 +14,7 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -123,7 +124,6 @@ public class MainActivity extends Activity {
                  */
 
                 toEmailList = emailStr;
-                //toEmailList = "samueldegroot@yahoo.com"; //test
                 emailSubject = "Photo and Video Recording Release Form";
                 emailBody = "Email body";
                 emailCC = org_email;
