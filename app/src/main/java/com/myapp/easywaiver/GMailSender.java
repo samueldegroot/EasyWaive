@@ -76,7 +76,7 @@ public class GMailSender {
 
         //add CC recipient
         if (isValidEmail(emailCC)) {
-            emailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(emailCC));
+            emailMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(emailCC));
         }
 
         emailMessage.setSubject(emailSubject);
