@@ -195,9 +195,7 @@ public class MainActivity extends Activity {
     }
 
     public void writeEmail(String email) throws FileNotFoundException {
-        //File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyPhotoWaiver/emails.csv");
-        //File file = new File(getExternalFilesDir(null), "EasyPhotoWaiver/emails.csv");
-        File file = new File(getDocumentStorageDir("EasyPhotoWaiver"), "emails.csv");
+        File file = new File(getDocumentStorageDir("EasyPhotoWaiver"), "Signer Information.csv");
         FileOutputStream fos = new FileOutputStream(file, true);
         try {
             fos.write(email.getBytes());

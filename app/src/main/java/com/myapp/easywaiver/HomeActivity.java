@@ -84,8 +84,8 @@ public class HomeActivity extends AppCompatActivity {
         Button new_form_button = findViewById(R.id.new_form);
         Button org_button = findViewById(R.id.org);
         Button share_button = findViewById(R.id.share);
-        org_button.setText("View Forms");
-        share_button.setText("Upload Forms");
+        org_button.setText("View Signed Waivers");
+        share_button.setText("Export Signed Waivers");
         TextView banner_tv = findViewById(R.id.banner_tv);
         banner_tv.setText(banner);
 
@@ -221,7 +221,8 @@ public class HomeActivity extends AppCompatActivity {
                 // Add the buttons
                 builder.setPositiveButton(R.string.back, null);
                 // Set other dialog properties
-                builder.setMessage(R.string.dialog_message);
+                String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photo and Video Recording Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
+                builder.setMessage(about_message);
                 builder.setTitle(R.string.about);
 
                 // Create the AlertDialog
