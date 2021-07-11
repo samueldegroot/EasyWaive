@@ -92,16 +92,6 @@ public class HomeActivity extends AppCompatActivity {
         share_button.setEnabled(true);
         share_button.setAlpha(1);
 
-        /*
-        //get last signed pdf, if exists enable share button
-        File lastPdf = (File) getIntent().getSerializableExtra("pdfFile");
-        if (lastPdf != null) {
-            share_button.setEnabled(true);
-            share_button.setAlpha(1);
-        }
-
-         */
-
         // Create our Activity ViewModel, which exists to handle global Snackbar messages
         HomeActivityViewModel.HomeActivityViewModelFactory homeActivityViewModelFactory = new
                 HomeActivityViewModel.HomeActivityViewModelFactory(
@@ -149,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
                         .setShowVideos(false)
                         .setShowFiles(true)
                         .setSingleChoiceMode(false)
-                        .setSuffixes("pdf", "csv")
+                        .setSuffixes("pdf")
                         .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
                         .build());
                 startActivityForResult(intent, FILE_REQUEST_CODE);
@@ -167,7 +157,7 @@ public class HomeActivity extends AppCompatActivity {
                         .setShowVideos(false)
                         .setShowFiles(true)
                         .setSingleChoiceMode(false)
-                        .setSuffixes("pdf", "csv")
+                        .setSuffixes("pdf")
                         .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
                         .build());
                 startActivityForResult(intent, UPLOAD_REQUEST_CODE);
