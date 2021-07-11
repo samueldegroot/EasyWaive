@@ -308,31 +308,37 @@ public class HomeActivity extends AppCompatActivity {
             switch (requestCode) {
                 case FILE_REQUEST_CODE:
                     files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
-                    file = files.get(0);
-                    myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/EasyPhotoWaiver/"+file.getName());
-                    if (myFile.exists()) {
-                        Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", myFile);
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(uri, file.getMimeType());
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(intent);
+                    if (!files.isEmpty()) {
+                        file = files.get(0);
+                        myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/EasyPhotoWaiver/"+file.getName());
+                        if (myFile.exists()) {
+                            Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", myFile);
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setDataAndType(uri, file.getMimeType());
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            startActivity(intent);
+                        }
                     }
 
                     break;
 
                 case UPLOAD_REQUEST_CODE:
                     files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
-                    file = files.get(0);
-                    myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/EasyPhotoWaiver/"+file.getName());
-                    shareFile(myFile, file.getMimeType());
+                    if (!files.isEmpty()) {
+                        file = files.get(0);
+                        myFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "/EasyPhotoWaiver/"+file.getName());
+                        shareFile(myFile, file.getMimeType());
+                    }
 
                     break;
                 case IMAGE_REQUEST_CODE:
                     files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
-                    file = files.get(0);
-                    Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                    saveBackgroundToInternalStorage(bitmap);
+                    if (!files.isEmpty()) {
+                        file = files.get(0);
+                        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+                        saveBackgroundToInternalStorage(bitmap);
+                    }
 
                     break;
             }
