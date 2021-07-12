@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -76,6 +77,8 @@ public class HomeActivity extends AppCompatActivity {
         organization = loadString(this, "organization", "Organization Name", getString(R.string.preference_file_key));
         banner = loadString(this, "banner", "Welcome!", getString(R.string.preference_file_key));
         org_email = loadString(this, "org_email", "Organization Email", getString(R.string.preference_file_key));
+        int savedVersionCode = loadInt(this, "version_code", -1, getString(R.string.preference_file_key));
+
 
         //organization = read_file(getApplicationContext(), "organization.txt");
         //banner = read_file(getApplicationContext(), "banner.txt");
@@ -115,21 +118,28 @@ public class HomeActivity extends AppCompatActivity {
         };
         handler.postDelayed(r, 500);
 
+        //show first time message
+        int currentVersionCode;
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            currentVersionCode = pInfo.versionCode;
+            saveInt(this, "version_code", currentVersionCode, getString(R.string.preference_file_key));
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            currentVersionCode = -1;
+        }
+        if (savedVersionCode < currentVersionCode || savedVersionCode == -1) {
+            String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photo and Video Recording Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
+            showBasicDialog(getString(R.string.about), about_message);
+        }
+
         new_form_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isActive) {
                     if (organization == "Organization Name" || org_email == "Organization Email") {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                        // Add the buttons
-                        builder.setPositiveButton(R.string.back, null);
-                        // Set other dialog properties
-                        builder.setMessage(R.string.please_org_settings);
-                        builder.setTitle(R.string.org_settings);
-
-                        // Create the AlertDialog
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        //show org settings dialog
+                        showBasicDialog(getString(R.string.org_settings), getString(R.string.please_org_settings));
                     }
                     else {
                         Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
@@ -221,18 +231,10 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
 
             case R.id.about:
-                //set background
-                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                // Add the buttons
-                builder.setPositiveButton(R.string.back, null);
-                // Set other dialog properties
+                //show how to use
                 String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photo and Video Recording Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
-                builder.setMessage(about_message);
-                builder.setTitle(R.string.about);
+                showBasicDialog(getString(R.string.about), about_message);
 
-                // Create the AlertDialog
-                AlertDialog dialog = builder.create();
-                dialog.show();
                 return true;
 
             case R.id.set_background:
@@ -415,6 +417,18 @@ public class HomeActivity extends AppCompatActivity {
         return sp.getString(saveKey, defValue);
     }
 
+    public static void saveInt(Activity activity, String saveKey, int input, String prefKey) {
+        SharedPreferences sp = activity.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(saveKey, input);
+        editor.apply();
+    }
+
+    public static int loadInt(Activity activity, String saveKey, int defValue, String prefKey) {
+        SharedPreferences sp = activity.getSharedPreferences(prefKey, Context.MODE_PRIVATE);
+        return sp.getInt(saveKey, defValue);
+    }
+
     public boolean saveBackgroundToInternalStorage(Bitmap image) {
         try {
             FileOutputStream fos = this.openFileOutput("customBackground", Context.MODE_PRIVATE);
@@ -436,6 +450,19 @@ public class HomeActivity extends AppCompatActivity {
             //Log.e("getThumbnail() on internal storage", ex.getMessage());
         }
         return thumbnail;
+    }
+
+    private void showBasicDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        // Add the buttons
+        builder.setPositiveButton(R.string.back, null);
+        // Set other dialog properties
+        builder.setMessage(message);
+        builder.setTitle(title);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
 
