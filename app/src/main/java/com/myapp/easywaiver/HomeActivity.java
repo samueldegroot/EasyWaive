@@ -119,11 +119,26 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isActive) {
-                    Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
-                    myIntent.putExtra("org", organization);
-                    myIntent.putExtra("org_email", org_email);
-                    HomeActivity.this.startActivity(myIntent);
-                } else {
+                    if (organization == "Organization Name" || org_email == "Organization Email") {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                        // Add the buttons
+                        builder.setPositiveButton(R.string.back, null);
+                        // Set other dialog properties
+                        builder.setMessage(R.string.please_org_settings);
+                        builder.setTitle(R.string.org_settings);
+
+                        // Create the AlertDialog
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                    else {
+                        Intent myIntent = new Intent(HomeActivity.this, ReleaseFormActivity.class);
+                        myIntent.putExtra("org", organization);
+                        myIntent.putExtra("org_email", org_email);
+                        HomeActivity.this.startActivity(myIntent);
+                    }
+                }
+                else {
                     ewr.billingDataSource.launchBillingFlow(HomeActivity.this, SKU_EASY_WAIVE_APP_SUBSCRIPTION);
                 }
             }

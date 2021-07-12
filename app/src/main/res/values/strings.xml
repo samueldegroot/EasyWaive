@@ -27,5 +27,9 @@
     <string name="default_bg">Default</string>
     <string name="preference_file_key">shared</string>
     <string name="thanks_message"> A copy of your release form will be sent to the email you provided.</string>
+    <string name="set_welcome_message">Set Welcome Message</string>
+    <string name="export_signer_info">Export Signer Info</string>
+    <string name="org_settings">Org. settings incomplete</string>
+    <string name="please_org_settings">Please set your Org. Name and Email before starting a new waiver</string>
 
 </resources>
