@@ -195,7 +195,8 @@ public class MainActivity extends Activity {
     }
 
     public void writeEmail(String email) throws FileNotFoundException {
-        File file = new File(getDocumentStorageDir("EasyPhotoWaiver"), "Signer Information.csv");
+        String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
+        File file = new File(getDocumentStorageDir("EasyPhotoWaiver"), "Signer Information " + currentDate + ".csv");
         FileOutputStream fos = new FileOutputStream(file, true);
         try {
             fos.write(email.getBytes());
