@@ -85,7 +85,7 @@ public class GMailSender {
 
         //attachment
         BodyPart messageBodyPart1 = new MimeBodyPart();
-        messageBodyPart1.setText(emailBody);
+        messageBodyPart1.setContent(emailBody, "text/html");
 
         MimeBodyPart messageBodyPart2 = new MimeBodyPart();
 

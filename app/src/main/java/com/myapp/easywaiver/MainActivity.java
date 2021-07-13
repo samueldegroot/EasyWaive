@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
 
                 toEmailList = emailStr;
                 emailSubject = "EasyPhotoWaiver - Release Form Confirmation";
-                emailBody = "This is an automatic email to confirm that " + organization + " has received your Photo and Video Recording Release Form created with EasyPhotoWaiver.\n\n" +
+                emailBody = "This is an automatic email to confirm that " + organization + " has received your Photo and Video Recording Release Form created with <a href=https://play.google.com/store/apps/details?id=com.myapp.easywaiver>EasyPhotoWaiver</a>.<br>" +
                         "A copy of your waiver is attached below for your convenience. Thank you!";
                 emailCC = org_email;
 
