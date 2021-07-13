@@ -36,6 +36,7 @@ import com.jaiselrahman.filepicker.config.Configurations;
 import com.jaiselrahman.filepicker.model.MediaFile;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
         Button org_button = findViewById(R.id.org);
         Button share_button = findViewById(R.id.share);
         org_button.setText("View Signed Waivers");
-        share_button.setText("Export Signed Waivers");
+        share_button.setText("Export All Waivers");
         TextView banner_tv = findViewById(R.id.banner_tv);
         banner_tv.setText(banner);
 
@@ -183,6 +184,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyPhotoWaiver");
                 if (file.exists()) {
+                    /*
                     Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
                     intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
                             .setCheckPermission(true)
@@ -193,7 +195,12 @@ public class HomeActivity extends AppCompatActivity {
                             .setSuffixes("pdf")
                             .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
                             .build());
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     startActivityForResult(intent, UPLOAD_REQUEST_CODE);
+
+                     */
+
+                    shareAll("pdf", "Export signed waivers");
                 }
                 else {
                     Toast.makeText(HomeActivity.this, "No files to export, start a new waiver first", Toast.LENGTH_SHORT).show();
@@ -244,6 +251,12 @@ public class HomeActivity extends AppCompatActivity {
                 //show how to use
                 String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photo and Video Recording Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
                 showBasicDialog(getString(R.string.about), about_message);
+
+                return true;
+
+            case R.id.export_emails:
+                //share all "csv" files
+                shareAll("csv", "Export signer information Excel files");
 
                 return true;
 
@@ -474,6 +487,29 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void shareAll(String fileEnding, String title) {
+        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.setType("*/*");
+        FileFilter pdfFilter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getName().endsWith(fileEnding);
+            }
+        };
+        File[] filesToSend = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/EasyPhotoWaiver").listFiles(pdfFilter);
+        ArrayList<Uri> files = new ArrayList<Uri>();
+        for(File myFile: filesToSend) {
+            Uri myUri = FileProvider.getUriForFile(
+                    HomeActivity.this,
+                    getPackageName() + ".provider", //(use your app signature + ".provider" )
+                    myFile);
+            files.add(myUri);
+        }
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+        startActivity(Intent.createChooser(intent, title));
+    }
+
 }
 
     //graveyard

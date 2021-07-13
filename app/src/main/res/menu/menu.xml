@@ -11,11 +11,15 @@
             app:showAsAction="never"/>
         <item
             android:id="@+id/set_banner"
-            android:title="Set Welcome Message"
+            android:title="@string/set_welcome_message"
             app:showAsAction="never"/>
         <item
             android:id="@+id/set_background"
-            android:title="Set Background"
+            android:title="@string/set_background"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/export_emails"
+            android:title="@string/export_signer_info"
             app:showAsAction="never"/>
         <item
             android:id="@+id/about"
