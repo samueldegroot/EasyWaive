@@ -50,7 +50,7 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="Name"
-        android:inputType="textNoSuggestions|textPersonName"
+        android:inputType="textNoSuggestions|textCapWords"
         signature:layout_constraintBottom_toTopOf="@+id/email_text"
         signature:layout_constraintLeft_toLeftOf="parent"
         signature:layout_constraintRight_toRightOf="parent"

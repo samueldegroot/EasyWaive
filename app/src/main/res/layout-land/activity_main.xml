@@ -58,7 +58,7 @@
             android:layout_marginHorizontal="16dp"
             android:ems="10"
             android:hint="Name"
-            android:inputType="textNoSuggestions|textPersonName"
+            android:inputType="textNoSuggestions|textCapWords"
             signature:layout_constraintBottom_toBottomOf="parent"
             signature:layout_constraintEnd_toStartOf="@+id/email_text"
             signature:layout_constraintHorizontal_chainStyle="packed"
