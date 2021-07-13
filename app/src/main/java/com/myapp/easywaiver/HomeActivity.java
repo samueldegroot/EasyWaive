@@ -157,17 +157,23 @@ public class HomeActivity extends AppCompatActivity {
         org_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
-                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
-                        .setCheckPermission(true)
-                        .setShowImages(false)
-                        .setShowVideos(false)
-                        .setShowFiles(true)
-                        .setSingleChoiceMode(false)
-                        .setSuffixes("pdf")
-                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
-                        .build());
-                startActivityForResult(intent, FILE_REQUEST_CODE);
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyPhotoWaiver");
+                if (file.exists()) {
+                    Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
+                    intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                            .setCheckPermission(true)
+                            .setShowImages(false)
+                            .setShowVideos(false)
+                            .setShowFiles(true)
+                            .setSingleChoiceMode(false)
+                            .setSuffixes("pdf")
+                            .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
+                            .build());
+                    startActivityForResult(intent, FILE_REQUEST_CODE);
+                }
+                else {
+                    Toast.makeText(HomeActivity.this, "No files to view, start a new waiver first", Toast.LENGTH_SHORT).show();
+                }
             }
 
         });
@@ -175,19 +181,23 @@ public class HomeActivity extends AppCompatActivity {
         share_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
-                intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
-                        .setCheckPermission(true)
-                        .setShowImages(false)
-                        .setShowVideos(false)
-                        .setShowFiles(true)
-                        .setSingleChoiceMode(false)
-                        .setSuffixes("pdf")
-                        .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
-                        .build());
-                startActivityForResult(intent, UPLOAD_REQUEST_CODE);
-
-                //shareFile(lastPdf);
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyPhotoWaiver");
+                if (file.exists()) {
+                    Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
+                    intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                            .setCheckPermission(true)
+                            .setShowImages(false)
+                            .setShowVideos(false)
+                            .setShowFiles(true)
+                            .setSingleChoiceMode(false)
+                            .setSuffixes("pdf")
+                            .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
+                            .build());
+                    startActivityForResult(intent, UPLOAD_REQUEST_CODE);
+                }
+                else {
+                    Toast.makeText(HomeActivity.this, "No files to export, start a new waiver first", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
