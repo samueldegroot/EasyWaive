@@ -110,18 +110,21 @@ public class MainActivity extends Activity {
                 EditText name = findViewById(R.id.name_text);
                 String nameStr = name.getText().toString();
                 EditText email = findViewById(R.id.email_text);
-                String emailStr = email.getText().toString();
+                String emailStr = email.getText().toString().toLowerCase();
+                String[] words = nameStr.toLowerCase().split(" ");
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < words.length; i++) {
+                    String word = words[i];
 
-                /*
-                if (emailStr.contains("@")) {
-                    try {
-                        writeEmail(emailStr);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                    if (i > 0 && word.length() > 0) {
+                        builder.append(" ");
                     }
-                }
 
-                 */
+                    String cap = word.substring(0, 1).toUpperCase() + word.substring(1);
+                    builder.append(cap);
+                }
+                nameStr = builder.toString();
+
                 String organization = HomeActivity.loadString(MainActivity.this, "organization", "", getString(R.string.preference_file_key));
 
                 toEmailList = emailStr;
