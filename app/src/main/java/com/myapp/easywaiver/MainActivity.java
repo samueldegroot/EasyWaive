@@ -133,7 +133,7 @@ public class MainActivity extends Activity {
                         "A copy of your waiver is attached below for your convenience. Thank you!";
                 emailCC = org_email;
 
-                createPDF(nameStr, waiver_text, signatureBitmap);
+                createPDF(nameStr, emailStr, waiver_text, signatureBitmap);
             }
         });
     }
@@ -224,7 +224,7 @@ public class MainActivity extends Activity {
         //Toast.makeText(MainActivity.this, "Wrote email", Toast.LENGTH_SHORT).show();
     }
 
-    public void createPDF(String nameStr, String waiver_text, Bitmap signatureBitmap) {
+    public void createPDF(String nameStr, String emailStr, String waiver_text, Bitmap signatureBitmap) {
         PdfDocument pdfDocument = new PdfDocument();
 
         // two variables for paint "paint" is used
@@ -305,8 +305,11 @@ public class MainActivity extends Activity {
         canvas.drawText("_______________________________________________", 48, 640, title);
         canvas.drawText("Signature", 48, 655, title);
 
-        canvas.drawText("Printed Name of Individual Photographed/Recorded: __________________________________________", 48, 720, title);
-        canvas.drawText(nameStr, 792/2-16, 718, title);
+        canvas.drawText("Printed Name of Individual Photographed/Recorded: _________________________________________", 48, 720, title);
+        canvas.drawText(nameStr, 792/2-16, 717, title);
+
+        canvas.drawText("Email Address of Individual Photographed/Recorded: _________________________________________", 48, 780, title);
+        canvas.drawText(emailStr, 792/2-16, 777, title);
 
         title.setTextAlign(Paint.Align.RIGHT);
         String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
