@@ -167,7 +167,7 @@ public class HomeActivity extends AppCompatActivity {
                             .setShowVideos(false)
                             .setShowFiles(true)
                             .setSingleChoiceMode(false)
-                            .setSuffixes("pdf")
+                            .setSuffixes("pdf, csv")
                             .setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
                             .build());
                     startActivityForResult(intent, FILE_REQUEST_CODE);
