@@ -169,7 +169,7 @@ public class MainActivity extends Activity {
             builder.setTitle(R.string.thanks);
             //do email stuff if user entered valid email
             if (GMailSender.isValidEmail(toEmailList)) {
-                writeEmail(toEmailList);
+                writeEmail(name, toEmailList);
                 new SendMailTask(MainActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, emailCC, pdfName);
                 builder.setMessage(R.string.thanks_message);
             }
@@ -194,13 +194,21 @@ public class MainActivity extends Activity {
         MainActivity.this.sendBroadcast(mediaScanIntent);
     }
 
-    public void writeEmail(String email) throws FileNotFoundException {
+    public void writeEmail(String name, String email) throws FileNotFoundException {
         String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
         File file = new File(getDocumentStorageDir("EasyPhotoWaiver"), "Signer Information " + currentDate + ".csv");
+        boolean doesFileExist = file.exists();
         FileOutputStream fos = new FileOutputStream(file, true);
         try {
+            if (!doesFileExist) { //if new file, write headers
+                fos.write("Name,Email,Date\n".getBytes());
+            }
+            fos.write(name.getBytes());
+            fos.write(",".getBytes());
             fos.write(email.getBytes());
             fos.write(",".getBytes());
+            fos.write(currentDate.getBytes());
+            fos.write("\n".getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
