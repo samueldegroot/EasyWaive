@@ -10,12 +10,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -212,6 +214,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v("orientation", String.valueOf(this.getResources().getBoolean(R.bool.is_landscape)));
         EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
         ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
         View myView = findViewById(R.id.home_constraint);
@@ -415,7 +418,22 @@ public class HomeActivity extends AppCompatActivity {
         int backgroundNum = sp.getInt("backgroundNum",0);
         switch(backgroundNum) {
             case 1:
-                myView.setBackgroundResource(R.drawable.flag);
+                if (activity.getApplicationContext().getResources().getBoolean(R.bool.is_landscape)) {
+                    //Drawable d = activity.getApplicationContext().getResources().getDrawable(R.drawable.flag);
+                    Bitmap bmpOriginal = BitmapFactory.decodeResource(activity.getResources(), R.drawable.flag);
+
+                    Bitmap bmResult = Bitmap.createBitmap(bmpOriginal.getWidth(), bmpOriginal.getHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas tempCanvas = new Canvas(bmResult);
+                    tempCanvas.rotate(270, bmpOriginal.getWidth()/2, bmpOriginal.getHeight()/2);
+                    tempCanvas.drawBitmap(bmpOriginal, 0, 0, null);
+
+                    Drawable d = new BitmapDrawable(bmResult);
+                    myView.setBackground(d);
+
+                }
+                else {
+                    myView.setBackgroundResource(R.drawable.flag);
+                }
                 myView.getBackground().setAlpha(127);
                 break;
             case 2:
