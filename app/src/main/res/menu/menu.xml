@@ -13,10 +13,10 @@
             android:id="@+id/set_banner"
             android:title="@string/set_welcome_message"
             app:showAsAction="never"/>
-        <item
+        <!-- <item
             android:id="@+id/set_background"
             android:title="@string/set_background"
-            app:showAsAction="never"/>
+            app:showAsAction="never"/> -->
         <item
             android:id="@+id/export_emails"
             android:title="@string/export_signer_info"

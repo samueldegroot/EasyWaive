@@ -260,7 +260,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 return true;
 
-            case R.id.set_background:
+            /*case R.id.set_background:
                 AlertDialog.Builder builder_radio = new AlertDialog.Builder(HomeActivity.this);
                 // Add the buttons
                 builder_radio.setPositiveButton(R.string.back, null);
@@ -307,6 +307,8 @@ public class HomeActivity extends AppCompatActivity {
                 AlertDialog dialog_radio = builder_radio.create();
                 dialog_radio.show();
                 return true;
+
+             */
 
             default:
                 // If we got here, the user's action was not recognized.
