@@ -7,6 +7,23 @@
     android:clipToPadding="false"
     tools:context="com.myapp.easywaiver.MainActivity">
 
+    <EditText
+        android:id="@+id/phone_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="Phone"
+        android:textSize="24sp"
+        android:inputType="textNoSuggestions|phone"
+        signature:layout_constraintBottom_toTopOf="@+id/email_text"
+        signature:layout_constraintLeft_toLeftOf="parent"
+        signature:layout_constraintRight_toRightOf="parent"
+        signature:layout_constraintTop_toBottomOf="@id/name_text"
+        signature:layout_constraintVertical_bias="0.926" />
+
     <android.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="0dp"
@@ -30,9 +47,8 @@
         android:id="@+id/input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:gravity="center"
         android:text="@string/input"
         android:textColor="#FFFFFF"
@@ -47,12 +63,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="Name"
-        android:inputType="textNoSuggestions|textCapWords"
         android:textSize="24sp"
-        signature:layout_constraintBottom_toTopOf="@+id/email_text"
+        android:inputType="textNoSuggestions|textCapWords"
+        signature:layout_constraintBottom_toTopOf="@id/phone_text"
         signature:layout_constraintLeft_toLeftOf="parent"
         signature:layout_constraintRight_toRightOf="parent"
         signature:layout_constraintTop_toBottomOf="@id/input" />
@@ -67,13 +84,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
+        android:textSize="24sp"
         android:hint="Email"
         android:inputType="textNoSuggestions|textWebEmailAddress"
-        android:textSize="24sp"
         signature:layout_constraintBottom_toTopOf="@+id/guideline6"
         signature:layout_constraintLeft_toLeftOf="parent"
         signature:layout_constraintRight_toRightOf="parent"
-        signature:layout_constraintTop_toBottomOf="@+id/name_text" />
+        signature:layout_constraintTop_toBottomOf="@id/phone_text" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
@@ -131,7 +148,6 @@
         android:id="@+id/buttons_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:orientation="horizontal"
         signature:layout_constraintBottom_toBottomOf="parent"
         signature:layout_constraintStart_toStartOf="parent">

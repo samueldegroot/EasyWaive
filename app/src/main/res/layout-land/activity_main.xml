@@ -51,32 +51,49 @@
         signature:layout_constraintTop_toBottomOf="@+id/input">
 
         <EditText
+            android:id="@+id/phone_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:hint="Phone"
+            android:inputType="textNoSuggestions|phone"
+            signature:layout_constraintBottom_toBottomOf="parent"
+            signature:layout_constraintLeft_toRightOf="@id/name_text"
+            signature:layout_constraintRight_toLeftOf="@id/email_text"
+            signature:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
             android:id="@+id/name_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="Name"
             android:inputType="textNoSuggestions|textCapWords"
             signature:layout_constraintBottom_toBottomOf="parent"
-            signature:layout_constraintEnd_toStartOf="@+id/email_text"
+            signature:layout_constraintEnd_toStartOf="@+id/phone_text"
             signature:layout_constraintHorizontal_chainStyle="packed"
             signature:layout_constraintStart_toStartOf="parent"
             signature:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/email_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="32dp"
             android:ems="10"
             android:hint="Email"
             android:inputType="textNoSuggestions|textWebEmailAddress"
             signature:layout_constraintBottom_toBottomOf="parent"
             signature:layout_constraintEnd_toEndOf="parent"
-            signature:layout_constraintStart_toEndOf="@+id/name_text"
+            signature:layout_constraintStart_toEndOf="@+id/phone_text"
             signature:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

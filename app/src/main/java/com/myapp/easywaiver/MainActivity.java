@@ -109,6 +109,8 @@ public class MainActivity extends Activity {
 
                 EditText name = findViewById(R.id.name_text);
                 String nameStr = name.getText().toString();
+                EditText phone = findViewById(R.id.phone_text);
+                String phoneStr = phone.getText().toString();
                 EditText email = findViewById(R.id.email_text);
                 String emailStr = email.getText().toString().toLowerCase();
                 String[] words = nameStr.toLowerCase().split(" ");
@@ -129,11 +131,11 @@ public class MainActivity extends Activity {
 
                 toEmailList = emailStr;
                 emailSubject = "EasyPhotoWaiver - Release Form Confirmation";
-                emailBody = "This is an automatic email to confirm that " + organization + " has received your Photo and Video Recording Release Form created with <a href=https://play.google.com/store/apps/details?id=com.myapp.easywaiver>EasyPhotoWaiver</a>.<br>" +
+                emailBody = "This is an automatic email to confirm that the " + organization + " has received your Photo and Video Recording Release Form created with <a href=https://play.google.com/store/apps/details?id=com.myapp.easywaiver>EasyPhotoWaiver</a>.<br>" +
                         "A copy of your waiver is attached below for your convenience. Thank you!";
                 emailCC = org_email;
 
-                createPDF(nameStr, emailStr, waiver_text, signatureBitmap);
+                createPDF(nameStr, phoneStr, emailStr, waiver_text, signatureBitmap);
             }
         });
     }
@@ -148,7 +150,7 @@ public class MainActivity extends Activity {
         return file;
     }
 
-    public void addPDFToDocuments(PdfDocument pdfDocument, String name) {
+    public void addPDFToDocuments(PdfDocument pdfDocument, String name, String phone) {
         try {
             String pdfName = String.format("%s Release Form.pdf", name);
             File pdf = new File(getDocumentStorageDir("EasyPhotoWaiver"), pdfName);
@@ -172,7 +174,7 @@ public class MainActivity extends Activity {
             builder.setTitle(R.string.thanks);
             //do email stuff if user entered valid email
             if (GMailSender.isValidEmail(toEmailList)) {
-                writeEmail(name, toEmailList);
+                writeEmail(name, phone, toEmailList);
                 new SendMailTask(MainActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, emailCC, pdfName);
                 builder.setMessage(R.string.thanks_message);
             }
@@ -197,16 +199,18 @@ public class MainActivity extends Activity {
         MainActivity.this.sendBroadcast(mediaScanIntent);
     }
 
-    public void writeEmail(String name, String email) throws FileNotFoundException {
+    public void writeEmail(String name, String phone, String email) throws FileNotFoundException {
         String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
         File file = new File(getDocumentStorageDir("EasyPhotoWaiver"), "Signer Information " + currentDate + ".csv");
         boolean doesFileExist = file.exists();
         FileOutputStream fos = new FileOutputStream(file, true);
         try {
             if (!doesFileExist) { //if new file, write headers
-                fos.write("Name,Email,Date\n".getBytes());
+                fos.write("Name,Phone,Email,Date\n".getBytes());
             }
             fos.write(name.getBytes());
+            fos.write(",".getBytes());
+            fos.write(phone.getBytes());
             fos.write(",".getBytes());
             fos.write(email.getBytes());
             fos.write(",".getBytes());
@@ -224,7 +228,7 @@ public class MainActivity extends Activity {
         //Toast.makeText(MainActivity.this, "Wrote email", Toast.LENGTH_SHORT).show();
     }
 
-    public void createPDF(String nameStr, String emailStr, String waiver_text, Bitmap signatureBitmap) {
+    public void createPDF(String nameStr, String phoneStr, String emailStr, String waiver_text, Bitmap signatureBitmap) {
         PdfDocument pdfDocument = new PdfDocument();
 
         // two variables for paint "paint" is used
@@ -280,7 +284,7 @@ public class MainActivity extends Activity {
         // the first parameter is our text, second parameter
         // is position from start, third parameter is position from top
         // and then we are passing our variable of paint which is title.
-        canvas.drawText("VIDEO and PHOTOGRAPH RELEASE FORM", (792)/2, 80, title);
+        canvas.drawText("PHOTOGRAPH RELEASE FORM", (792)/2, 80, title);
 
 
         int textWidth = canvas.getWidth() - 96;
@@ -299,31 +303,37 @@ public class MainActivity extends Activity {
         title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         title.setTextSize(14);
 
+        int info_offset_x = 64;
+        int info_start_y = 600;
+
         // below line is used for setting
         // our text to center of PDF.
         title.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("_______________________________________________", 48, 640, title);
-        canvas.drawText("Signature", 48, 655, title);
+        canvas.drawText("_______________________________________________", 48, info_start_y, title);
+        canvas.drawText("Signature", 48, info_start_y+15, title);
 
-        canvas.drawText("Printed Name of Individual Photographed/Recorded: _________________________________________", 48, 720, title);
-        canvas.drawText(nameStr, 792/2-16, 717, title);
+        canvas.drawText("Printed Name: __________________________________", 48, info_start_y+80, title);
+        canvas.drawText(nameStr, info_offset_x, info_start_y+77, title);
 
-        canvas.drawText("Email Address of Individual Photographed/Recorded: _________________________________________", 48, 780, title);
-        canvas.drawText(emailStr, 792/2-16, 777, title);
+        canvas.drawText("Phone: _________________________________________", 48, info_start_y+140, title);
+        canvas.drawText(phoneStr, info_offset_x, info_start_y+137, title);
+
+        canvas.drawText("Email: _________________________________________", 48, info_start_y+200, title);
+        canvas.drawText(emailStr, info_offset_x, info_start_y+197, title);
 
         title.setTextAlign(Paint.Align.RIGHT);
         String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
 
-        canvas.drawText(currentDate, 792-48, 635, title);
-        canvas.drawText("_______________________", 792-48, 640, title);
-        canvas.drawText("Date", 792-48, 655, title);
+        canvas.drawText(currentDate, 792-48, info_start_y-5, title);
+        canvas.drawText("_______________________", 792-48, info_start_y, title);
+        canvas.drawText("Date", 792-48, info_start_y+15, title);
 
         // after adding all attributes to our
         // PDF file we will be finishing our page.
         pdfDocument.finishPage(myPage);
         //Toast.makeText(MainActivity.this, "finished page", Toast.LENGTH_SHORT).show();
 
-        addPDFToDocuments(pdfDocument, nameStr);
+        addPDFToDocuments(pdfDocument, nameStr, phoneStr);
     }
 
 
