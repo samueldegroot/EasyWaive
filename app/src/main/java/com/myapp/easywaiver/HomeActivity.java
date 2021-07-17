@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final int IMAGE_REQUEST_CODE = 8779;
     private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
+    String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photograph Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
 
     String organization;
     String banner;
@@ -132,7 +133,6 @@ public class HomeActivity extends AppCompatActivity {
             currentVersionCode = -1;
         }
         if (savedVersionCode < currentVersionCode || savedVersionCode == -1) {
-            String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photo and Video Recording Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
             showBasicDialog(getString(R.string.about), about_message);
         }
 
@@ -252,7 +252,6 @@ public class HomeActivity extends AppCompatActivity {
 
             case R.id.about:
                 //show how to use
-                String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photo and Video Recording Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
                 showBasicDialog(getString(R.string.about), about_message);
 
                 return true;

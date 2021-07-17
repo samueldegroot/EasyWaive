@@ -113,19 +113,21 @@ public class MainActivity extends Activity {
                 String phoneStr = phone.getText().toString();
                 EditText email = findViewById(R.id.email_text);
                 String emailStr = email.getText().toString().toLowerCase();
-                String[] words = nameStr.toLowerCase().split(" ");
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < words.length; i++) {
-                    String word = words[i];
+                if (nameStr.length() > 0) {
+                    String[] words = nameStr.toLowerCase().split(" ");
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < words.length; i++) {
+                        String word = words[i];
 
-                    if (i > 0 && word.length() > 0) {
-                        builder.append(" ");
+                        if (i > 0 && word.length() > 0) {
+                            builder.append(" ");
+                        }
+
+                        String cap = word.substring(0, 1).toUpperCase() + word.substring(1);
+                        builder.append(cap);
                     }
-
-                    String cap = word.substring(0, 1).toUpperCase() + word.substring(1);
-                    builder.append(cap);
+                    nameStr = builder.toString();
                 }
-                nameStr = builder.toString();
 
                 String organization = HomeActivity.loadString(MainActivity.this, "organization", "", getString(R.string.preference_file_key));
 
@@ -231,6 +233,9 @@ public class MainActivity extends Activity {
     public void createPDF(String nameStr, String phoneStr, String emailStr, String waiver_text, Bitmap signatureBitmap) {
         PdfDocument pdfDocument = new PdfDocument();
 
+        int info_offset_x = 128;
+        int info_start_y = 500;
+
         // two variables for paint "paint" is used
         // for drawing shapes and we will use "title"
         // for adding text in our PDF file.
@@ -265,8 +270,8 @@ public class MainActivity extends Activity {
         // second parameter is position from left
         // third parameter is position from top and last
         // one is our variable for paint.
-        Bitmap scaledbmp = Bitmap.createScaledBitmap(signatureBitmap, 180, 120, false);
-        canvas.drawBitmap(scaledbmp, 64, 520, paint);
+        Bitmap scaledbmp = Bitmap.createScaledBitmap(signatureBitmap, 200, 60, true);
+        canvas.drawBitmap(scaledbmp, 64, info_start_y-60, paint);
 
         // below line is used for adding typeface for
         // our text which we will be adding in our PDF file.
@@ -303,23 +308,20 @@ public class MainActivity extends Activity {
         title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         title.setTextSize(14);
 
-        int info_offset_x = 64;
-        int info_start_y = 600;
-
         // below line is used for setting
         // our text to center of PDF.
         title.setTextAlign(Paint.Align.LEFT);
-        canvas.drawText("_______________________________________________", 48, info_start_y, title);
+        canvas.drawText("________________________________________________", 48, info_start_y, title);
         canvas.drawText("Signature", 48, info_start_y+15, title);
 
         canvas.drawText("Printed Name: __________________________________", 48, info_start_y+80, title);
-        canvas.drawText(nameStr, info_offset_x, info_start_y+77, title);
+        canvas.drawText(nameStr, info_offset_x+16, info_start_y+77, title);
 
         canvas.drawText("Phone: _________________________________________", 48, info_start_y+140, title);
-        canvas.drawText(phoneStr, info_offset_x, info_start_y+137, title);
+        canvas.drawText(phoneStr, info_offset_x-24, info_start_y+137, title);
 
-        canvas.drawText("Email: _________________________________________", 48, info_start_y+200, title);
-        canvas.drawText(emailStr, info_offset_x, info_start_y+197, title);
+        canvas.drawText("Email: __________________________________________", 48, info_start_y+200, title);
+        canvas.drawText(emailStr, info_offset_x-32, info_start_y+197, title);
 
         title.setTextAlign(Paint.Align.RIGHT);
         String currentDate = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(new Date());
