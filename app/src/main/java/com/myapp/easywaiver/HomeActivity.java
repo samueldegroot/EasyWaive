@@ -257,7 +257,13 @@ public class HomeActivity extends AppCompatActivity {
 
             case R.id.export_emails:
                 //share all "csv" files
-                shareAll("csv", "Export signer information Excel files");
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "EasyPhotoWaiver");
+                if (file.exists()) {
+                    shareAll("csv", "Export signer information Excel files");
+                }
+                else {
+                    Toast.makeText(HomeActivity.this, "No files to export, start a new waiver first", Toast.LENGTH_SHORT).show();
+                }
 
                 return true;
 
