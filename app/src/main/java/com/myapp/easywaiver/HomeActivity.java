@@ -3,7 +3,6 @@ package com.myapp.easywaiver;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -22,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -47,11 +47,10 @@ import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCR
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final String TAG = "HomeActivity";
+    //private static final String TAG = "HomeActivity";
     private static final int FILE_REQUEST_CODE = 8777;
     private static final int UPLOAD_REQUEST_CODE = 8778;
     private static final int IMAGE_REQUEST_CODE = 8779;
-    private HomeActivityViewModel homeActivityViewModel;
     static public Boolean isActive;
     String about_message = "EasyPhotoWaiver is designed to facilitate the collection of Photograph Release Forms.\nSetup: Set your organization name, email, and any other customizations you would like to make.\nUse: Select Start New Waiver to begin. After the signer is finished, a signed and completed PDF will be sent to your organization's email address. All signers' information will be stored in a local Excel file which can exported from the options menu.\nUse of this application requires a subscription with a one-week free trial.";
 
@@ -91,8 +90,8 @@ public class HomeActivity extends AppCompatActivity {
         Button new_form_button = findViewById(R.id.new_form);
         Button org_button = findViewById(R.id.org);
         Button share_button = findViewById(R.id.share);
-        org_button.setText("View Signed Waivers");
-        share_button.setText("Export All Waivers");
+        org_button.setText(R.string.view_waivers);
+        share_button.setText(R.string.export_waivers);
         TextView banner_tv = findViewById(R.id.banner_tv);
         banner_tv.setText(banner);
 
@@ -104,7 +103,7 @@ public class HomeActivity extends AppCompatActivity {
                 HomeActivityViewModel.HomeActivityViewModelFactory(
                 ((EasyWaiveApplication) getApplication()).appContainer.
                         easyWaiveRepository);
-        homeActivityViewModel = new ViewModelProvider(this, homeActivityViewModelFactory)
+        HomeActivityViewModel homeActivityViewModel = new ViewModelProvider(this, homeActivityViewModelFactory)
                 .get(HomeActivityViewModel.class);
         // Allows billing to refresh purchases during onResume
         getLifecycle().addObserver(homeActivityViewModel.getBillingLifecycleObserver());
@@ -140,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isActive) {
-                    if (organization == "Organization Name" || org_email == "Organization Email") {
+                    if (organization.equals("Organization Name") || org_email.equals("Organization Email")) {
                         //show org settings dialog
                         showBasicDialog(getString(R.string.org_settings), getString(R.string.please_org_settings));
                     }
@@ -372,7 +371,8 @@ public class HomeActivity extends AppCompatActivity {
                     if (!files.isEmpty()) {
                         file = files.get(0);
                         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                        saveBackgroundToInternalStorage(bitmap);
+                        //saveBackgroundToInternalStorage(bitmap); //will need to redo this if I add backgrounds back
+                        saveIconToInternalStorage(bitmap);
                     }
 
                     break;
@@ -436,12 +436,31 @@ public class HomeActivity extends AppCompatActivity {
                 myView.getBackground().setAlpha(127);
                 break;
             case 2:
-                Drawable d = new BitmapDrawable(getBackground(activity));
+                Drawable d = new BitmapDrawable(getBackgroundImage(activity));
                 myView.setBackground(d);
                 myView.getBackground().setAlpha(127);
                 break;
             default:
                 myView.setBackgroundResource(0);
+                //myView.getBackground().setAlpha(255);
+                break;
+        }
+    }
+
+    public static void loadAndSetIcon(Activity activity, ImageView myView, String key) {
+        SharedPreferences sp = activity.getSharedPreferences(key, Context.MODE_PRIVATE);
+        int iconNum = sp.getInt("iconNum",0);
+        switch(iconNum) {
+            case 1: //flag icons
+                myView.setImageResource(R.drawable.flag_icon); //Logo in corner
+                break;
+            case 2: //custom
+                myView.setImageBitmap(getIconImage(activity));
+                //myView.setImageResource(d);
+                //myView.getBackground().setAlpha(127);
+                break;
+            default: //no icon
+                myView.setImageResource(0);
                 //myView.getBackground().setAlpha(255);
                 break;
         }
@@ -482,10 +501,33 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public static Bitmap getBackground(Activity activity) {
+    public boolean saveIconToInternalStorage(Bitmap image) {
+        try {
+            FileOutputStream fos = this.openFileOutput("customIcon", Context.MODE_PRIVATE);
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static Bitmap getBackgroundImage(Activity activity) {
         Bitmap thumbnail = null;
         try {
             File filePath = activity.getApplicationContext().getFileStreamPath("customBackground");
+            FileInputStream fi = new FileInputStream(filePath);
+            thumbnail = BitmapFactory.decodeStream(fi);
+        } catch (Exception ex) {
+            //Log.e("getThumbnail() on internal storage", ex.getMessage());
+        }
+        return thumbnail;
+    }
+
+    public static Bitmap getIconImage(Activity activity) {
+        Bitmap thumbnail = null;
+        try {
+            File filePath = activity.getApplicationContext().getFileStreamPath("customIcon");
             FileInputStream fi = new FileInputStream(filePath);
             thumbnail = BitmapFactory.decodeStream(fi);
         } catch (Exception ex) {
