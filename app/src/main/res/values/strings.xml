@@ -33,5 +33,6 @@
     <string name="please_org_settings">Please set your Organization Name and Email in the settings menu before starting a new waiver</string>
     <string name="view_waivers">View Signed Waivers</string>
     <string name="export_waivers">Export All Waivers</string>
+    <string name="set_logo">Set Logo</string>
 
 </resources>

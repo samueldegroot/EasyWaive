@@ -1,8 +1,11 @@
 package com.myapp.easywaiver;
 
+import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -16,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +37,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.jaiselrahman.filepicker.activity.FilePickerActivity;
 import com.jaiselrahman.filepicker.config.Configurations;
 import com.jaiselrahman.filepicker.model.MediaFile;
@@ -41,9 +46,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-
-import static com.myapp.easywaiver.EasyWaiveRepository.SKU_EASY_WAIVE_APP_SUBSCRIPTION;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -69,9 +73,11 @@ public class HomeActivity extends AppCompatActivity {
         setActionBar(myToolbar);
         myToolbar.inflateMenu(R.menu.menu);
         View myView = findViewById(R.id.home_constraint);
+        ImageView iconView = findViewById(R.id.imageView);
 
         //set background
         loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        loadAndSetIcon(this, iconView, getString(R.string.preference_file_key));
 
         verifyStoragePermissions(this);
         //getActionBar().setIcon(R.mipmap.ic_launcher_round); //icon too big to use :(
@@ -217,7 +223,9 @@ public class HomeActivity extends AppCompatActivity {
         EasyWaiveRepository ewr = ((EasyWaiveApplication) HomeActivity.this.getApplication()).appContainer.easyWaiveRepository;
         ewr.billingDataSource.isActiveSubcription(SKU_EASY_WAIVE_APP_SUBSCRIPTION);
         View myView = findViewById(R.id.home_constraint);
-        loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        ImageView imageView = findViewById(R.id.imageView);
+        //loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        loadAndSetIcon(this, imageView, getString(R.string.preference_file_key));
     }
 
     @Override
@@ -265,6 +273,64 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "No files to export, start a new waiver first", Toast.LENGTH_SHORT).show();
                 }
 
+                return true;
+
+            case R.id.set_icon:
+                AlertDialog.Builder builder_radio = new AlertDialog.Builder(HomeActivity.this);
+                // Add the buttons
+                builder_radio.setPositiveButton(R.string.back, null);
+                // Set other dialog properties
+                builder_radio.setTitle(R.string.set_logo)
+                        .setItems(new String[]{"None", "Flag", "Custom"}, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                SharedPreferences sp = HomeActivity.this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                switch(which) {
+                                    case 0:
+                                        //set to default
+                                        editor.putInt("iconNum", 0);
+                                        editor.apply();
+                                        Toast.makeText(HomeActivity.this, "Please restart app to show changes", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case 1:
+                                        //set to flag
+                                        editor.putInt("iconNum", 1);
+                                        editor.apply();
+                                        Toast.makeText(HomeActivity.this, "Please restart app to show changes", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case 2:
+                                        //set to custom
+                                        editor.putInt("iconNum", 2);
+                                        editor.apply();
+                                        //ask to upload background
+                                        /*
+                                        Intent intent = new Intent(HomeActivity.this, FilePickerActivity.class);
+                                        intent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                                                .setCheckPermission(true)
+                                                .setShowImages(true)
+                                                .setShowVideos(false)
+                                                .setSingleChoiceMode(true)
+                                                //.setRootPath(Environment.DIRECTORY_DOCUMENTS + "/EasyPhotoWaiver")
+                                                .build());
+
+                                        startActivityForResult(intent, IMAGE_REQUEST_CODE);
+
+                                         */
+                                        ImagePicker.with(HomeActivity.this)
+                                                .galleryOnly()
+                                                .crop()
+                                                .start(IMAGE_REQUEST_CODE);
+                                        break;
+                                }
+                                //ImageView iconView = findViewById(R.id.imageView);
+                                //loadAndSetIcon(HomeActivity.this, iconView, getString(R.string.preference_file_key));
+                            }
+                        });
+
+                // Create the AlertDialog
+                AlertDialog dialog_radio = builder_radio.create();
+                dialog_radio.show();
                 return true;
 
             /*case R.id.set_background:
@@ -373,6 +439,15 @@ public class HomeActivity extends AppCompatActivity {
 
                     break;
                 case IMAGE_REQUEST_CODE:
+                    Uri uri = data.getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(HomeActivity.this.getContentResolver(), uri);
+                        saveIconToInternalStorage(bitmap);
+                        Toast.makeText(HomeActivity.this, "Please wait while your change takes place", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /*
                     files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
                     if (!files.isEmpty()) {
                         file = files.get(0);
@@ -380,6 +455,8 @@ public class HomeActivity extends AppCompatActivity {
                         //saveBackgroundToInternalStorage(bitmap); //will need to redo this if I add backgrounds back
                         saveIconToInternalStorage(bitmap);
                     }
+
+                     */
 
                     break;
             }
@@ -459,9 +536,11 @@ public class HomeActivity extends AppCompatActivity {
         switch(iconNum) {
             case 1: //flag icons
                 myView.setImageResource(R.drawable.flag_icon); //Logo in corner
+                myView.setImageAlpha(127);
                 break;
             case 2: //custom
                 myView.setImageBitmap(getIconImage(activity));
+                myView.setImageAlpha(127);
                 //myView.setImageResource(d);
                 //myView.getBackground().setAlpha(127);
                 break;

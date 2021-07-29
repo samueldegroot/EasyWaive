@@ -18,14 +18,14 @@
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline10"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/new_form"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/home_toolbar"
-        app:srcCompat="@drawable/flag_icon" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <android.widget.Toolbar
         android:id="@+id/home_toolbar"

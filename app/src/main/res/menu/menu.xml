@@ -13,6 +13,10 @@
             android:id="@+id/set_banner"
             android:title="@string/set_welcome_message"
             app:showAsAction="never"/>
+        <item
+            android:id="@+id/set_icon"
+            android:title="@string/set_logo"
+            app:showAsAction="never" />
         <!-- <item
             android:id="@+id/set_background"
             android:title="@string/set_background"
