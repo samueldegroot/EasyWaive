@@ -72,11 +72,11 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.home_toolbar);
         setActionBar(myToolbar);
         myToolbar.inflateMenu(R.menu.menu);
-        View myView = findViewById(R.id.home_constraint);
+        //View myView = findViewById(R.id.home_constraint);
         ImageView iconView = findViewById(R.id.imageView);
 
         //set background
-        loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        //loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
         loadAndSetIcon(this, iconView, getString(R.string.preference_file_key));
 
         verifyStoragePermissions(this);

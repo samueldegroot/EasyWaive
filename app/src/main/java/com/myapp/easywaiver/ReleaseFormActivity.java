@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -23,10 +24,12 @@ public class ReleaseFormActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.form_toolbar);
         setActionBar(myToolbar);
 
-        View myView = findViewById(R.id.release_constraint);
+        //View myView = findViewById(R.id.main_constraint);
+        ImageView iconView = findViewById(R.id.imageView2);
 
         //set background
-        HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        //HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        HomeActivity.loadAndSetIcon(this, iconView, getString(R.string.preference_file_key));
 
         String organization = getIntent().getStringExtra("org");
         String org_email = getIntent().getStringExtra("org_email");

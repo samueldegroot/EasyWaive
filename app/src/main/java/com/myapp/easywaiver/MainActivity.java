@@ -21,6 +21,7 @@ import android.text.TextPaint;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -61,10 +62,12 @@ public class MainActivity extends Activity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setActionBar(myToolbar);
 
-        View myView = findViewById(R.id.main_constraint);
+        //View myView = findViewById(R.id.main_constraint);
+        ImageView iconView = findViewById(R.id.imageView3);
 
         //set background
-        HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        //HomeActivity.loadAndSetBackground(this, myView, getString(R.string.preference_file_key));
+        HomeActivity.loadAndSetIcon(this, iconView, getString(R.string.preference_file_key));
 
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
 

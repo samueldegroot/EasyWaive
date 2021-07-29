@@ -7,6 +7,23 @@
     android:clipToPadding="false"
     tools:context="com.myapp.easywaiver.MainActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        signature:layout_constraintGuide_percent="0.15" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        signature:layout_constraintBottom_toBottomOf="@id/input"
+        signature:layout_constraintEnd_toEndOf="@id/guideline12"
+        signature:layout_constraintStart_toStartOf="parent"
+        signature:layout_constraintTop_toBottomOf="@id/my_toolbar" />
+
     <EditText
         android:id="@+id/phone_text"
         android:layout_width="wrap_content"
